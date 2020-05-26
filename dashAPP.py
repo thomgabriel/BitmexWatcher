@@ -121,7 +121,7 @@ app.layout = html.Div(
                         id="learnMore"
                     ),
                     href="https://quan.digital",
-                    className="two columns"
+                    className="three columns"
                 ),
                 html.A(
                     html.Button(
@@ -129,7 +129,7 @@ app.layout = html.Div(
                         id="github"
                     ),
                     href="https://github.com/quan-digital/whale-watcher",
-                    className="two columns"
+                    className="three columns"
                 )
             ],
             id="header",
@@ -152,8 +152,90 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container"
+                                    className="pretty_container two columns"
                                 ),
+                                html.Div(
+                                    [
+                                        html.P("High Price"),
+                                        html.H6(
+                                            id="highPrice",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Mid Price"),
+                                        html.H6(
+                                            id="midPrice",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Bid Price"),
+                                        html.H6(
+                                            id="bidPrice",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Volume"),
+                                        html.H6(
+                                            id="volume",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Turn Over"),
+                                        html.H6(
+                                            id="turnover",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Mark Price"),
+                                        html.H6(
+                                            id="markPrice",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Open Interest"),
+                                        html.H6(
+                                            id="openInterest",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                            ],
+                            id="btcInfo",
+                            className="row"
+                        ),
+                        # Second info row
                         html.Div(
                             [
                                 html.Div(
@@ -165,102 +247,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("High Price"),
-                                        html.H6(
-                                            id="highPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Mark Price"),
-                                        html.H6(
-                                            id="markPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Ask Price"),
-                                        html.H6(
-                                            id="askPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Turn Over"),
-                                        html.H6(
-                                            id="turnover",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Volume"),
-                                        html.H6(
-                                            id="volume",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Open Interest"),
-                                        html.H6(
-                                            id="openInterest",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Previous Close Price"), 
-                                        html.H6(
-                                            id="prevClosePrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
-                                ),
-                            ],
-                            id="btcInfo",
-                            className="row"
-                        ),
-                        # Second info row
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        html.P("Mid Price"),
-                                        html.H6(
-                                            id="midPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
+                                    className="pretty_container two columns"
                                 ),
                                 html.Div(
                                     [
@@ -271,7 +258,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container"
+                                    className="pretty_container two columns"
                                 ),
                                 html.Div(
                                     [
@@ -282,29 +269,18 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container"
+                                    className="pretty_container two columns"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("Bid Price"), 
+                                        html.P("Ask Price"), 
                                         html.H6(
-                                            id="bidPrice",
+                                            id="askPrice",
                                             className="info_text"
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Turn Over 24h"),
-                                        html.H6(
-                                            id="turnover24h",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container"
+                                    className="pretty_container two columns"
                                 ),
                                 html.Div(
                                     [
@@ -315,19 +291,41 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container"
+                                    className="pretty_container two columns"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("Open Value"),
+                                        html.P("Turn Over 24h"),
+                                        html.H6(
+                                            id="turnover24h",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Previous Close Price"),
+                                        html.H6(
+                                            id="prevClosePrice",
+                                            className="info_text"
+                                        )
+                                    ],
+                                    id="",
+                                    className="pretty_container two columns"
+                                ),
+                                html.Div(
+                                    [
+                                        html.P("Open Value"), 
                                         html.H6(
                                             id="openValue",
                                             className="info_text"
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container"
-                                ),
+                                    className="pretty_container two columns"
+                                )
                             ],
                             id="infoContainer",
                             className="row"
@@ -395,8 +393,7 @@ app.layout = html.Div(
                     "flex-direction": "column"
                 },
             )
-        ]
-    )
+        
 
 def fixNan(x, pMin=True):
     if isnan(x):
@@ -873,7 +870,7 @@ def update_metrics(n):
 if __name__ =='__main__':
     try:       
         create_dirs()
-        Thread(target = app.server.run(host= '0.0.0.0', debug=True, threaded= True)).start()
+        Thread(target = app.server.run(host= '0.0.0.0', debug=True, threaded= True, port= '80')).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()

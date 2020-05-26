@@ -92,7 +92,7 @@ def InitialiseBot():
                     ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
                     '\n' + str(round(((float(order[2])-marketprice)/marketprice*100),2)) + '%' +' From Market Price' + '\n' + '🦏🚨🚨🚨🚨🦏')
                     csv_logger.info("%s" %(order[4]))
-                    sleep(5)
+                    sleep(2)
                 elif 0.04<= float(order[5]) < 0.06:
                     send_group_message(
                     '🐋🚨🚨🚨🐋' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > marketprice else 'ASK') + 
