@@ -786,14 +786,14 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
     orders = zip([str(price) for price in final_tbl['price']], 
                  [str(size) for size in final_tbl['volume']], 
                  [str(oid) for oid in fulltbl['address']],
-                 [str(size/volumewhale) for size in final_tbl['volume']]
+                 [str(round(size/volumewhale),2) for size in final_tbl['volume']]
                  )
     for order in orders:
         if order[2] in [oid[4] for oid in load_orders()]:
             pass
         else:
             if float(order[3]) > minVolSpot:
-                csv_logger.info("%s,%s,%s, %s" %(order[0], order[1], order[2], order[3]))
+                csv_logger.info("%s,%s,%s, %s, %s" %(order[0], order[1], order[2], order[3], marketPrice))
                 continue
             else: 
                 pass   
@@ -870,7 +870,7 @@ def update_metrics(n):
 if __name__ =='__main__':
     try:       
         create_dirs()
-        Thread(target = app.server.run(host= '0.0.0.0', debug=True, threaded= True, port= '80')).start()
+        Thread(target = app.server.run(host= '0.0.0.0', debug=True, threaded= True)).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
