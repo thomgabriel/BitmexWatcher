@@ -66,9 +66,13 @@ def InitialiseBot():
     while True:
         sleep(10)
         csv_logger = setup_db('telegram')
-        with open(DATA_DIR + 'telegram/telegram' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
-            readcsv = csv.reader(f, delimiter=',') 
-            orderscsv = [row[2] for row in readcsv] 
+        
+        try:
+            with open(DATA_DIR + 'telegram/telegram' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+                readcsv = csv.reader(f, delimiter=',')
+                orderscsv = [row[2] for row in readcsv]
+        except:
+            ordercsv = []
 
         for order in load_orders():
             if order[4] in orderscsv:

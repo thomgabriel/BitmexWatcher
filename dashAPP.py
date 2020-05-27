@@ -870,7 +870,7 @@ def update_metrics(n):
 if __name__ =='__main__':
     try:       
         create_dirs()
-        Thread(target = app.server.run(host= '0.0.0.0', debug=True, threaded= True)).start()
+        Thread(target = app.server.run(host= '0.0.0.0', debug=True, threaded= True, port= '80')).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
