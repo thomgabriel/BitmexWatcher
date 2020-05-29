@@ -64,7 +64,7 @@ def InitialiseBot():
     create_dirs()
     print('QuanWhaleBot is running...')
     while True:
-        sleep(10)
+        sleep(5)
         csv_logger = setup_db('telegram')
         
         try:
