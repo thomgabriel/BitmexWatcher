@@ -80,40 +80,33 @@ def InitialiseBot():
             else:
                 if float(order[5]) >= 0.08:
                     send_group_message(
-                    '🐋🚨🚨🚨🚨🚨🐋' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
+                    '🐋🚨🚨🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
                     ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
-                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price'  + '\n' + '🦏🚨🚨🚨🚨🚨🦏')
+                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price')
                     csv_logger.info("%s" %(order[4]))
-                    sleep(2)
+                    sleep(1)
                 elif 0.06<= float(order[5]) < 0.08:
                     send_group_message(
-                    '🐋🚨🚨🚨🚨🐋' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
+                    '🐋🚨🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
                     ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
-                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' +' From Market Price' + '\n' + '🦏🚨🚨🚨🚨🦏')
+                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' +' From Market Price')
                     csv_logger.info("%s" %(order[4]))
-                    sleep(2)
+                    sleep(1)
                 elif 0.04<= float(order[5]) < 0.06:
                     send_group_message(
-                    '🐋🚨🚨🚨🐋' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
+                    '🐋🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
                     ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
-                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price' + '\n' + '🦏🚨🚨🚨🦏')
+                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price')
                     csv_logger.info("%s" %(order[4]))
-                    sleep(2)
+                    sleep(1)
                 elif 0.03<= float(order[5]) < 0.04:
                     send_group_message(
-                    '🐋🚨🚨🐋' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
+                    '🐋🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
                     ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
-                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price' + '\n' + '🦏🚨🚨🦏')
+                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price')
                     csv_logger.info("%s" %(order[4]))
-                    sleep(2)
-                elif 0.02<= float(order[5]) < 0.03:
-                    send_group_message(
-                    '🐋🚨🐋' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
-                    ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
-                    '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price' + '\n' + '🦏🚨🦏')
-                    csv_logger.info("%s" %(order[4]))
-                    sleep(2)
-               
+                    sleep(1)
+
     updater = Updater(TOKEN_CHATBOT, use_context=True)
     updater.start_polling()
     

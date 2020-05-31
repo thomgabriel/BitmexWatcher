@@ -26,7 +26,7 @@ server = app.server
 ws = BitMEXBook()
 http = bitmex.bitmex(test=False)
 DATA_DIR = 'data/'
-clientRefresh = 5
+clientRefresh = 1
 
 tables = {}
 depth_ask = {}
@@ -106,15 +106,10 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H2(
-                            'Pyno - Dashboard V0',
+                            'Whale Watcher - Dashboard V0.1',
                             style={'padding-left':'65px',
                                     'padding-top' : '20px'}
 
-                        ),
-                        html.H5(
-                            'Running Instance Stats',
-                            style={'padding-left':'65px',
-                                    'font-size': '1.5rem'}
                         ),
                         html.H5(
                             id = 'timestamp',
@@ -139,6 +134,14 @@ app.layout = html.Div(
                         id="github"
                     ),
                     href="https://github.com/quan-digital/whale-watcher",
+                    className="three columns"
+                ),
+                html.A(
+                    html.Button(
+                        "Telegram Group",
+                        id="telegram"
+                    ),
+                    href="https://t.me/BitMEXWhaleAlert",
                     className="three columns"
                 )
             ],
@@ -353,7 +356,9 @@ app.layout = html.Div(
         ),
         html.Div([
             html.Div([
-                html.P("Whales spotted today"),
+                html.H4(
+                    'Whales spotted today:'
+                    ),
                 html.H6(
                     className="info_text",
                     id = "whales_soitted",
@@ -363,7 +368,28 @@ app.layout = html.Div(
                             className="pretty_container"
                         ),
                     ],
-                    className="pretty_container five columns"
+                    className="pretty_container six columns"
+                ),
+            
+                html.Div([
+                    html.P(
+                        '\n The app use a definition to spots a whale:',
+                        style={
+                            'font-size': '2rem',
+                            'color': '#b5c6cc',
+                            'align': 'left',
+                            }
+                    ),
+                    html.P(
+                        '* Orders that make up >= 3% of the volume of the order book shown in the +/-5% from present market price. \n',
+                        style={
+                            'font-size': '1.75rem',
+                            'color': '#b5c6cc',
+                            'align': 'left',
+                            }
+                        ),
+                        
+                    ],
                 ),
                 # Footer
                 html.Div(
@@ -378,7 +404,7 @@ app.layout = html.Div(
                             }
                         ),
                     html.P(
-                    'Pyno Dashboard v0.1 - © Quan Digital 2020',
+                    'Whale Watcher Dashboard v0.1 - © Quan Digital 2020',
                     style={
                         'padding-left':'165px',
                             'font-size': '1.5rem',
@@ -645,7 +671,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
             pass
         else:
             if float(order[3]) > minVolSpot:
-                csv_logger.info("%s,%s,%s, %s, %s" %(order[0], order[1], order[2], order[3], marketPrice))
+                csv_logger.info("%s,%s,%s,%s,%s" %(order[0], order[1], order[2], order[3], marketPrice))
                 continue
             else: 
                 pass 
@@ -852,8 +878,10 @@ def update_Site_data(n):
             [Input('interval-component', 'n_intervals')])
 def update_metrics(n):
     statusData = frontdata
+    orders = load_orders()
     orderList = [
-        ('There was a ' + order[3] + ' XBT order for ' + order[2] + ' USD at ' + order[1] + '\n') for order in load_orders()
+        'There was ' + str(round(sum([float(order[3]) for order in orders]),2)) + ' XBT from ' + str(len(orders)) + ' Whales today, worth $' +  
+        str("{:,}".format(round(sum([(float(order[3])*float(order[2])) for order in orders]),2)))
         ]
     return [
         str('Last updated: ' + dt.datetime.today().strftime('%Y-%m-%d')),
@@ -880,7 +908,7 @@ def run_calc_data():
     while (True):
         try:
             calc_data()
-            sleep(2)
+            sleep(1)
         except:
             sleep(2)
 
@@ -888,7 +916,7 @@ def run_frontdata():
     while (True):
         try: 
             get_frontend_data()
-            sleep(2)
+            sleep(1.666)
         except:
             sleep(2)
             
