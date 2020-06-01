@@ -26,16 +26,14 @@ server = app.server
 ws = BitMEXBook()
 http = bitmex.bitmex(test=False)
 DATA_DIR = 'data/'
-clientRefresh = 1
+clientRefresh = 2
 
 tables = {}
 depth_ask = {}
 depth_bid = {}
 marketPrice = {}
 shape_bid = {}
-shape_ask = {}
-timeStampsGet = {}  
-timeStamps = {}  
+shape_ask = {} 
 frontdata = {}
 
 def setup_db(name, extension='.csv', getPath = False):
@@ -461,14 +459,12 @@ def round_sig(x, sig=3, overwrite=0, minimum=0):
             return round(x, digits)
 
 def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble = False, minVolSpot = 0.02):
-    global tables, timeStamps, shape_bid, shape_ask, marketPrice, timeStampsGet, depth_bid, depth_ask
+    global tables, shape_bid, shape_ask, marketPrice, depth_bid, depth_ask
     order_book = ws.get_current_book()
     ask_tbl = pd.DataFrame(data=order_book['asks'], columns=[
                 'price', 'volume', 'address'])
     bid_tbl = pd.DataFrame(data=order_book['bids'], columns=[
                 'price', 'volume', 'address'])
-
-    timeStampsGet = dt.datetime.now().strftime("%H:%M:%S")
 
     # prepare Price
     ask_tbl['price'] = pd.to_numeric(ask_tbl['price'])
@@ -649,9 +645,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
     final_tbl.loc[(final_tbl['price'] <= mp), 'color'] = \
         'rgb(0,' + final_tbl.loc[(final_tbl['price']
                                     <= mp), 'colorintensity'].map(str) + ',0)'
-
-    timeStamps = timeStampsGet  # now save timestamp of calc start in timestamp used for title
-
+    
     tables = final_tbl  # save table data
 
     marketPrice = mp  # save market price
@@ -681,6 +675,8 @@ def graph_plot():
     data = tables
     ob_ask = depth_ask
     ob_bid = depth_bid
+    timeStamps = dt.datetime.now().strftime("%H:%M:%S")
+   
     #Get Minimum and Maximum
     ladder_Bid_Min = fixNan(shape_bid['volume'].min())
     ladder_Bid_Max = fixNan(shape_bid['volume'].max(), False)
@@ -908,7 +904,7 @@ def run_calc_data():
     while (True):
         try:
             calc_data()
-            sleep(1)
+            sleep(1.666)
         except:
             sleep(2)
 
@@ -928,8 +924,8 @@ if __name__ =='__main__':
         Thread(target= run_frontdata).start()
         Thread(target= run_calc_data).start()
         sleep(2)
-        Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
-        # Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
+        # Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
+        Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
