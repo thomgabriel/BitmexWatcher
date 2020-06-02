@@ -8,20 +8,9 @@ from logging.handlers import RotatingFileHandler
 import os
 import bitmex
 
-TOKEN_CHATBOT = "1158766486:AAFkET4PEo3PmysnXXJdvkMcUo_ft9zKiUg"
-GROUP_CHAT_ID = "-1001389420427"
+TOKEN_CHATBOT = "1221497425:AAG_mEqgR-AtLKUZL6Jq3SA3UxvBRRwKIFs"
+GROUP_CHAT_ID = "-1001373929421"
 DATA_DIR = 'data/'
-
-def create_dirs():
-    '''Creates data directories'''   
-    try:
-        os.mkdir('data')
-        os.mkdir(DATA_DIR + 'orders')
-        os.mkdir(DATA_DIR + 'telegram')
-        print("Directories created.")    
-        
-    except FileExistsError:
-        print("Directories already exist.")
 
 def setup_db(name, extension='.csv', getPath = False):
     """Setup writer that formats data to csv, supports multiple instances with no overlap."""
@@ -61,14 +50,15 @@ def load_orders():
 
 def InitialiseBot():
     
-    create_dirs()
-    print('QuanWhaleBot is running...')
+    print('QuanOrderBot is running...')
+    
+    updater = Updater(TOKEN_CHATBOT, use_context=True)
+    updater.start_polling()
     while True:
         sleep(5)
-        csv_logger = setup_db('telegram')
-        
+        csv_logger = setup_db('order_telegram')
         try:
-            with open(DATA_DIR + 'telegram/telegram' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+            with open(DATA_DIR + 'order_telegram/order_telegram' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
                 readcsv = csv.reader(f, delimiter=',')
                 orderscsv = [row[2] for row in readcsv]
         except:
@@ -81,34 +71,31 @@ def InitialiseBot():
                 if float(order[5]) >= 0.08:
                     send_group_message(
                     '🐋🚨🚨🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
-                    ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
+                    ' at $' + order[2] + ' level, worth $' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
-                elif 0.06<= float(order[5]) < 0.08:
+                elif 0.07<= float(order[5]) < 0.08:
                     send_group_message(
                     '🐋🚨🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
-                    ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
+                    ' at $' + order[2] + ' level, worth $' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' +' From Market Price')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
-                elif 0.04<= float(order[5]) < 0.06:
+                elif 0.06<= float(order[5]) < 0.07:
                     send_group_message(
                     '🐋🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
-                    ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
+                    ' at $' + order[2] + ' level, worth $' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
-                elif 0.03<= float(order[5]) < 0.04:
+                elif 0.05<= float(order[5]) < 0.06:
                     send_group_message(
                     '🐋🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BID' if float(order[2]) > float(order[6]) else 'ASK') + 
-                    ' for $' + order[2] + ' ($' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
+                    ' at $' + order[2] + ' level, worth $' +  str("{:,}".format(round(float(order[2])*float(order[3]), 2))) + ')' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
 
-    updater = Updater(TOKEN_CHATBOT, use_context=True)
-    updater.start_polling()
-    
 if __name__ == '__main__':
     InitialiseBot()

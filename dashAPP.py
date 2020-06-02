@@ -87,7 +87,11 @@ def create_dirs():
     try:
         os.mkdir('data')
         os.mkdir(DATA_DIR + 'orders')
-        os.mkdir(DATA_DIR + 'telegram')
+        os.mkdir(DATA_DIR + 'liquidation')
+        os.mkdir(DATA_DIR + 'trade')
+        os.mkdir(DATA_DIR + 'liquidation_telegram')
+        os.mkdir(DATA_DIR + 'order_telegram')
+        os.mkdir(DATA_DIR + 'trade_telegram')
         print("Directories created.")    
         
     except FileExistsError:
@@ -104,7 +108,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H2(
-                            'Whale Watcher - Dashboard V0.1',
+                            'BitMEX Watcher - Dashboard V0.1',
                             style={'padding-left':'65px',
                                     'padding-top' : '20px'}
 
@@ -116,15 +120,7 @@ app.layout = html.Div(
                         ),
                     ],
 
-                    className='eight columns'
-                ),
-                html.A(
-                    html.Button(
-                        "Learn More",
-                        id="learnMore"
-                    ),
-                    href="https://quan.digital",
-                    className="three columns"
+                    className='seven columns'
                 ),
                 html.A(
                     html.Button(
@@ -132,7 +128,7 @@ app.layout = html.Div(
                         id="github"
                     ),
                     href="https://github.com/quan-digital/whale-watcher",
-                    className="three columns"
+                    className="one columns"
                 ),
                 html.A(
                     html.Button(
@@ -140,8 +136,16 @@ app.layout = html.Div(
                         id="telegram"
                     ),
                     href="https://t.me/BitMEXWhaleAlert",
-                    className="three columns"
-                )
+                    className="two columns"
+                ),
+                html.A(
+                    html.Button(
+                        "Learn More",
+                        id="learnMore"
+                    ),
+                    href="https://quan.digital",
+                    className="one columns"
+                ),
             ],
             id="header",
             className='row',
@@ -354,46 +358,69 @@ app.layout = html.Div(
         ),
         html.Div([
             html.Div([
-                html.H4(
-                    'Whales spotted today:'
-                    ),
+                html.H4('Liquidations:'),
                 html.H6(
                     className="info_text",
-                    id = "whales_soitted",
+                    id = "liquidationList",
                     style={'whiteSpace': 'pre-wrap'}
                                 )
                             ],
-                            className="pretty_container"
-                        ),
-                    ],
-                    className="pretty_container six columns"
+                            className= 'pretty_container eight columns'
                 ),
-            
+            html.Div([
+                html.H4('Market Orders:'),
+                html.H6(
+                    className="info_text",
+                    id = "tradeList",
+                    style={'whiteSpace': 'pre-wrap'}
+                        )
+                    ],
+                    className= 'pretty_container eight columns'
+                    ),
+                    ],
+                    className="row" 
+                ),
                 html.Div([
                     html.P(
-                        '\n The app use a definition to spots a whale:',
+                        'App spot definitions:',
                         style={
                             'font-size': '2rem',
-                            'color': '#b5c6cc',
-                            'align': 'left',
-                            }
-                    ),
-                    html.P(
-                        '* Orders that make up >= 3% of the volume of the order book shown in the +/-5% from present market price. \n',
-                        style={
-                            'font-size': '1.75rem',
-                            'color': '#b5c6cc',
+                            'color': '#F9F9F9',
                             'align': 'left',
                             }
                         ),
-                        
+                    html.P(
+                        '* Price Levels that make up >= 5% of the volume of the order book shown in the +/-5% from present market price.' ,
+                        style={
+                            'font-size': '1.75rem',
+                            'color': '#F9F9F9',
+                            'align': 'left',
+                            }
+                        ),
+                    html.P(
+                        '* Liquidations above $200,000.00',
+                        style={
+                            'font-size': '1.75rem',
+                            'color': '#F9F9F9',
+                            'align': 'left',
+                            }
+                        ),
+                    html.P(
+                        '* Market Orders above $1.000.000,00',
+                        style={
+                            'font-size': '1.75rem',
+                            'color': '#F9F9F9',
+                            'align': 'left',
+                            }
+                        ),
                     ],
+                    className="pretty_container seven columns"
                 ),
                 # Footer
                 html.Div(
                     [
                     html.P(
-                    'Designed by canokaue',
+                    'Designed by thomgabriel',
                     style={
                             # 'padding-left':'65px',
                             'font-size': '1.5rem',
@@ -402,7 +429,7 @@ app.layout = html.Div(
                             }
                         ),
                     html.P(
-                    'Whale Watcher Dashboard v0.1 - © Quan Digital 2020',
+                    'BitMEX Watcher Dashboard v0.1 - © Quan Digital 2020',
                     style={
                         'padding-left':'165px',
                             'font-size': '1.5rem',
@@ -458,7 +485,7 @@ def round_sig(x, sig=3, overwrite=0, minimum=0):
         else:
             return round(x, digits)
 
-def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble = False, minVolSpot = 0.02):
+def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSpot = 0.02):
     global tables, shape_bid, shape_ask, marketPrice, depth_bid, depth_ask
     order_book = ws.get_current_book()
     ask_tbl = pd.DataFrame(data=order_book['asks'], columns=[
@@ -521,9 +548,9 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
 
         # Prepare Text
         ask_text = (str(round_sig(current_ask_volume, 3, 0, 2)) + 'XBT' + " (from " + str(current_ask_adresses) +
-                        " orders) up to " + str(round_sig(current_ask_border, 3, 0, 2)) + '$')
+                        " levels) up to " + str(round_sig(current_ask_border, 3, 0, 2)) + '$')
         bid_text = (str(round_sig(current_bid_volume, 3, 0, 2)) + 'XBT' + " (from " + str(current_bid_adresses) +
-                        " orders) down to " + str(round_sig(current_bid_border, 3, 0, 2)) + '$')
+                        " levels) down to " + str(round_sig(current_bid_border, 3, 0, 2)) + '$')
 
         # Save Data
         ob_ask.loc[i - 1] = [current_ask_border, current_ask_volume, current_ask_adresses, ask_text]
@@ -560,11 +587,6 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
     final_tbl['sqrt'] = np.sqrt(final_tbl['volume'])
     final_tbl['total_price'] = (((final_tbl['volume'] * final_tbl['price']).round(2)).apply(lambda x: "{:,}".format(x)))
 
-    # Following lines fix double drawing of orders in case it´s a ladder but bigger than 1%
-    if noDouble:
-        bid_tbl = bid_tbl[(bid_tbl['volume'] < minVolume)]
-        ask_tbl = ask_tbl[(ask_tbl['volume'] < minVolume)]
-
     bid_tbl['total_price'] = bid_tbl['volume'] * bid_tbl['price']
     ask_tbl['total_price'] = ask_tbl['volume'] * ask_tbl['price']
 
@@ -578,7 +600,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
     vol_grp_bid.columns = ['min_Price', 'max_Price', 'count', 'volume', 'total_price']
     vol_grp_ask.columns = ['min_Price', 'max_Price', 'count', 'volume', 'total_price']
 
-    # Filter data by min Volume, more than 1 (intefere with bubble), less than 70 (mostly 1 or 0.5 ETH humans)
+    # Filter data by min Volume, more than 1 (intefere with bubble), less than 70
     vol_grp_bid = vol_grp_bid[
         ((vol_grp_bid['volume'] >= minVolume) & (vol_grp_bid['count'] >= 2.0) & (vol_grp_bid['count'] < 70.0))]
     vol_grp_ask = vol_grp_ask[
@@ -606,20 +628,6 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
     vol_grp_bid['total_price'] = (vol_grp_bid['total_price'].round(2).apply(lambda x: "{:,}".format(x)))
     vol_grp_ask['total_price'] = (vol_grp_ask['total_price'].round(2).apply(lambda x: "{:,}".format(x)))
 
-    # Append individual text to each element
-    vol_grp_bid['text'] = ("There are " + vol_grp_bid['count'].map(str) + " orders " + vol_grp_bid['unique'].map(
-            str) + " " + 'XBT' +
-                            " each, from " + '$' + vol_grp_bid['min_Price'].map(str) + " to " + '$' +
-                            vol_grp_bid['max_Price'].map(str) + " resulting in a total of " + vol_grp_bid[
-                                'volume'].map(str) + " " + 'XBT' + " worth " + '$' + vol_grp_bid[
-                                'total_price'].map(str))
-    vol_grp_ask['text'] = ("There are " + vol_grp_ask['count'].map(str) + " orders " + vol_grp_ask['unique'].map(
-        str) + " " + 'XBT' +
-                            " each, from " + '$' + vol_grp_ask['min_Price'].map(str) + " to " + '$' +
-                            vol_grp_ask['max_Price'].map(str) + " resulting in a total of " + vol_grp_ask[
-                                'volume'].map(str) + " " + 'XBT' + " worth " + '$' + vol_grp_ask[
-                                'total_price'].map(str))
-
     # Save data global
     shape_ask = vol_grp_ask
     shape_bid = vol_grp_bid
@@ -632,12 +640,12 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
 
     # making the tooltip column for our charts
     final_tbl['text'] = (
-                "There is a " + final_tbl['volume'].map(str) + " " + 'XBT' + " order for " + '$' + final_tbl[
-            'price'].map(str) + " being offered by " + final_tbl['n_unique_orders'].map(
-            str) + " unique orders worth " + '$' + final_tbl['total_price'].map(str))
-
+                "There is " + final_tbl['volume'].map(str) + ' XBT at $' + final_tbl['price'].map(str)
+                + ' level, worth $' + final_tbl['total_price'].map(str))
     # determine buys / sells relative to last market price; colors price bubbles based on size
     # Buys are green, Sells are Red. Probably WHALES are highlighted by being brighter, detected by unqiue order count.
+    
+    
     final_tbl['colorintensity'] = final_tbl['n_unique_orders'].apply(calcColor)
     final_tbl.loc[(final_tbl['price'] > mp), 'color'] = \
         'rgb(' + final_tbl.loc[(final_tbl['price'] >
@@ -664,7 +672,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
         if order[2] in [oid[4] for oid in load_orders()]:
             pass
         else:
-            if float(order[3]) > minVolSpot:
+            if (float(order[3]) > minVolSpot) and (float(order[0]) not in range(marketPrice*0.0097, marketPrice*1.003)):
                 csv_logger.info("%s,%s,%s,%s,%s" %(order[0], order[1], order[2], order[3], marketPrice))
                 continue
             else: 
@@ -672,6 +680,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, noDouble
     return
 
 def graph_plot():
+    
     data = tables
     ob_ask = depth_ask
     ob_bid = depth_bid
@@ -854,7 +863,8 @@ def update_Site_data(n):
 
 # Cyclic upper data update function
 @app.callback([Output('timestamp', 'children'),
-            Output('whales_soitted', 'children'),
+            Output('liquidationList', 'children'),
+            Output('tradeList', 'children'),
             Output('symbol', 'children'),
             Output('state', 'children'),
             Output('prevClosePrice', 'children'),
@@ -874,14 +884,30 @@ def update_Site_data(n):
             [Input('interval-component', 'n_intervals')])
 def update_metrics(n):
     statusData = frontdata
-    orders = load_orders()
-    orderList = [
-        'There was ' + str(round(sum([float(order[3]) for order in orders]),2)) + ' XBT from ' + str(len(orders)) + ' Whales today, worth $' +  
-        str("{:,}".format(round(sum([(float(order[3])*float(order[2])) for order in orders]),2)))
-        ]
+
+    try:
+        with open(DATA_DIR + 'liquidation/liquidation' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+            readcsv = csv.reader(f, delimiter=',')
+            liquidations = [row for row in readcsv][1:]
+    except:
+        liquidations = []   
+    try:
+        with open(DATA_DIR + 'trade/trade' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+            readcsv = csv.reader(f, delimiter=',')
+            trades = [row for row in readcsv][1:]
+    except:
+        trades = []
+    
+    liquidationList = ['('+ liq[1] +') Liquidated' + ('Short: ' if liq[4] == ' Buy' else 'Long: ')  + str("{:,}".format(round(float(liq[6]), 2))) 
+                        + ' Contracts at $' + str("{:,}".format(float(liq[5]))) + '\n'  for liq in liquidations]
+
+    tradeList = ['('+ trade[1] +') ' + str("{:,}".format(round(float(trade[6]), 2))) + ' Contracts ' + ('bought' if trade[4] == ' Buy' else 'sold') 
+                  + ' at $' + str("{:,}".format(float(trade[5]))) + '\n' for trade in trades]
+
     return [
         str('Last updated: ' + dt.datetime.today().strftime('%Y-%m-%d')),
-        orderList,
+        liquidationList,
+        tradeList,
         statusData['symbol'],
         statusData['state'],
         statusData['prevClosePrice'],
