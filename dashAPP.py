@@ -885,6 +885,7 @@ def update_Site_data(n):
 @app.callback([Output('timestamp', 'children'),
             Output('liquidationList', 'children'),
             Output('orderList', 'children'),
+            Output('announcementList', 'children'),
             Output('symbol', 'children'),
             Output('state', 'children'),
             Output('prevClosePrice', 'children'),
