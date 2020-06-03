@@ -36,9 +36,9 @@ def setup_db(name, extension='.csv'):
         logger.addHandler(handler)
     return logger
 
-    liquidation_logger = setup_db('liquidation_telegram')
-    trade_logger = setup_db('trade_telegram')
-    ws = BitMEXWebsocket()
+liquidation_logger = setup_db('liquidation_telegram')
+trade_logger = setup_db('trade_telegram')
+ws = BitMEXWebsocket()
 
 def send_group_message(msg):
 	bot = telegram.Bot(token=TOKEN_CHATBOT)

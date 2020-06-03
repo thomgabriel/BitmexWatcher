@@ -889,6 +889,7 @@ def update_metrics(n):
         with open(DATA_DIR + 'liquidation/liquidation' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
             liquidations = [row for row in readcsv][1:]
+            liquidations = [liq for liq in liquidations if float(liq[6]) > 200000]
     except:
         liquidations = []   
     try:
@@ -898,7 +899,7 @@ def update_metrics(n):
     except:
         trades = []
     
-    liquidationList = ['('+ liq[1] +') Liquidated' + ('Short: ' if liq[4] == ' Buy' else 'Long: ')  + str("{:,}".format(round(float(liq[6]), 2))) 
+    liquidationList = ['('+ liq[1] +') Liquidated ' + ('Short: ' if liq[4] == ' Buy' else 'Long: ')  + str("{:,}".format(round(float(liq[6]), 2))) 
                         + ' Contracts at $' + str("{:,}".format(float(liq[5]))) + '\n'  for liq in liquidations]
 
     tradeList = ['('+ trade[1] +') ' + str("{:,}".format(round(float(trade[6]), 2))) + ' Contracts ' + ('bought' if trade[4] == ' Buy' else 'sold') 
@@ -950,8 +951,8 @@ if __name__ =='__main__':
         Thread(target= run_frontdata).start()
         Thread(target= run_calc_data).start()
         sleep(2)
-        # Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
-        Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
+        Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
+        # Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
