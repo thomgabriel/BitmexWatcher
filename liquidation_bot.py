@@ -15,7 +15,7 @@ GROUP_CHAT_ID = "-1001373929421"
 DATA_DIR = 'data/'
 
 liquidations = []
-trades = []
+announcements = []
 
 def setup_db(name, extension='.csv'):
     """Setup writer that formats data to csv, supports multiple instances with no overlap."""
@@ -37,7 +37,7 @@ def setup_db(name, extension='.csv'):
     return logger
 
 liquidation_logger = setup_db('liquidation_telegram')
-trade_logger = setup_db('trade_telegram')
+announcements_logger = setup_db('announcements_telegram')
 ws = BitMEXWebsocket()
 
 def send_group_message(msg):
@@ -45,20 +45,20 @@ def send_group_message(msg):
 	bot.send_message(GROUP_CHAT_ID, text=msg)
 
 def load_orders():
-    global liquidations, trades
+    global liquidations, announcements
     try:
         with open(DATA_DIR + 'liquidation/liquidation' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
             liquidations = [row for row in readcsv][1:]
     except:
-        liquidations = []   
+        liquidations = []  
 
     try:
-        with open(DATA_DIR + 'trade/trade' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+        with open(DATA_DIR + 'announcements/announcements' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
-            trades = [row for row in readcsv][1:]
+            announcements = [row for row in readcsv][1:]
     except:
-        trades = []      
+        announcements = []       
     return 
         
 def InitialiseBot():
@@ -69,9 +69,9 @@ def InitialiseBot():
 
     # Daily Report
     schedule.every().day.at("23:59").do(send_group_message,
-        ('Liquidation Daily Report:' + '\n' +
-        ('⛔️⛔️⛔️' if (sum([float(order[6]) for order in liquidations if order[4] == ' Buy']) < sum([float(order[6]) for order in liquidations 
-        if order[4] == ' Sell'])) else '❎❎❎') + '\n' + '\n' +
+        'Liquidation Daily Report:' + '\n' +
+        ('⛔️⛔️⛔️' if (sum([float(order[6]) for order in liquidations if order[4] == ' Buy'])) < (sum([float(order[6]) for order in liquidations 
+        if order[4] == ' Sell'])) else '❎❎❎' + '\n' + '\n' +
 
         str(len(liquidations)) + ' Liquidations in total today worth $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations]),2))) 
         + '.' + '\n' + '\n' +
@@ -93,11 +93,11 @@ def InitialiseBot():
         except:
             liquidation_csv = [] 
         try:
-            with open(DATA_DIR + 'trade_telegram/trade_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+            with open(DATA_DIR + 'announcements_telegram/announcements_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
                 readcsv = csv.reader(f, delimiter=',')
-                trade_csv = [row[2] for row in readcsv]
+                announcement_csv = [row[2] for row in readcsv]
         except:
-            trade_csv = []
+            announcement_csv = []
             
         for order in liquidations:
             if float(order[6]) > 200000:
@@ -116,21 +116,14 @@ def InitialiseBot():
                         liquidation_logger.info("%s" %(order[2]))
                         sleep(2)
 
-        for order in trades:
-                if order[2] in trade_csv:
-                    pass
-                else:
-                    if order[4] == ' Buy':
-                        send_group_message(
-                        '🟢 Market Buy: ' + str("{:,}".format(round(float(order[6]), 2))) + ' #XBT Contracts bought at $' + order[5])
-                        trade_logger.info("%s" %(order[2]))
-                        sleep(2)
-                   
-                    if order[4] == ' Sell':
-                        send_group_message(
-                        '🔴 Market Sell: ' + str("{:,}".format(round(float(order[6]), 2))) + ' #XBT Contracts sold at $' + order[5])
-                        trade_logger.info("%s" %(order[2]))
-                        sleep(2)
+        for anun in announcements:
+            if anun[2] in announcement_csv:
+                pass
+            else:
+                send_group_message(
+                    '❗️❗️❗️' + '\n' + '**' + anun[4] + '**' + '\n' + 'Link: ' + anun[3] + '.'
+                )
+
         sleep(5)
                        
 if __name__ == '__main__':

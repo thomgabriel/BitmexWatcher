@@ -88,12 +88,13 @@ def create_dirs():
         os.mkdir('data')
         os.mkdir(DATA_DIR + 'orders')
         os.mkdir(DATA_DIR + 'liquidation')
-        os.mkdir(DATA_DIR + 'trade')
         os.mkdir(DATA_DIR + 'liquidation_telegram')
         os.mkdir(DATA_DIR + 'order_telegram')
-        os.mkdir(DATA_DIR + 'trade_telegram')
+        os.mkdir(DATA_DIR + 'announcement')
+        os.mkdir(DATA_DIR + 'announcement_telegram')
+
         print("Directories created.")    
-        
+         
     except FileExistsError:
         print("Directories already exist.")
 
@@ -124,27 +125,30 @@ app.layout = html.Div(
                 ),
                 html.A(
                     html.Button(
-                        "GitHub",
-                        id="github"
+                        children = "GitHub",
+                        id="github",
+                        style={'box-shadow': '2px 2px 2px lightgrey'}
                     ),
                     href="https://github.com/quan-digital/whale-watcher",
-                    className="one columns"
+                    style = {'margin' : '10px'}
                 ),
                 html.A(
                     html.Button(
-                        "Telegram Group",
-                        id="telegram"
+                        children = "Telegram Group",
+                        id="telegram",
+                        style={'box-shadow': '2px 2px 2px lightgrey'}      
                     ),
-                    href="https://t.me/BitMEXWhaleAlert",
-                    className="two columns"
+                    href="https://t.me/bitmexwatcheralert",
+                    style = {'margin' : '10px'}
                 ),
                 html.A(
                     html.Button(
-                        "Learn More",
-                        id="learnMore"
+                        children = "Learn More",
+                        id="learnMore",
+                        style={'box-shadow': '2px 2px 2px lightgrey'} 
                     ),
                     href="https://quan.digital",
-                    className="one columns"
+                    style = {'margin' : '10px'}
                 ),
             ],
             id="header",
@@ -358,102 +362,101 @@ app.layout = html.Div(
         ),
         html.Div([
             html.Div([
-                html.H4('Liquidations:'),
-                html.H6(
-                    className="info_text",
-                    id = "liquidationList",
-                    style={'whiteSpace': 'pre-wrap'}
-                                )
-                            ],
-                            className= 'pretty_container eight columns'
-                ),
-            html.Div([
-                html.H4('Market Orders:'),
-                html.H6(
-                    className="info_text",
-                    id = "tradeList",
-                    style={'whiteSpace': 'pre-wrap'}
+                html.Div([
+                    html.H4('Liquidations:'),
+                    html.H6(
+                        className="info_text",
+                        id = "liquidationList",
+                        style={'whiteSpace': 'pre-wrap'}
                         )
                     ],
+                    className= 'pretty_container'
+                    ),],
                     className= 'pretty_container eight columns'
                     ),
-                    ],
-                    className="row" 
-                ),
+            html.Div([
                 html.Div([
-                    html.P(
-                        'App spot definitions:',
-                        style={
-                            'font-size': '2rem',
-                            'color': '#F9F9F9',
-                            'align': 'left',
-                            }
-                        ),
-                    html.P(
-                        '* Price Levels that make up >= 5% of the volume of the order book shown in the +/-5% from present market price.' ,
-                        style={
-                            'font-size': '1.75rem',
-                            'color': '#F9F9F9',
-                            'align': 'left',
-                            }
-                        ),
-                    html.P(
-                        '* Liquidations above $200,000.00',
-                        style={
-                            'font-size': '1.75rem',
-                            'color': '#F9F9F9',
-                            'align': 'left',
-                            }
-                        ),
-                    html.P(
-                        '* Market Orders above $1.000.000,00',
-                        style={
-                            'font-size': '1.75rem',
-                            'color': '#F9F9F9',
-                            'align': 'left',
-                            }
+                    html.H4('Whales Price Levels:'),
+                    html.H6(
+                        className="info_text",
+                        id = "orderList",
+                        style={'whiteSpace': 'pre-wrap'},
                         ),
                     ],
-                    className="pretty_container seven columns"
-                ),
-                # Footer
-                html.Div(
-                    [
-                    html.P(
-                    'Designed by thomgabriel',
-                    style={
-                            # 'padding-left':'65px',
-                            'font-size': '1.5rem',
-                            'color': '#b5c6cc',
-                            'align': 'left',
-                            }
-                        ),
-                    html.P(
-                    'BitMEX Watcher Dashboard v0.1 - © Quan Digital 2020',
-                    style={
-                        'padding-left':'165px',
-                            'font-size': '1.5rem',
-                            'color': '#b5c6cc',
-                            'align': 'left',
-                            }
-                        ),
-                    ], 
-                    id = 'footer',
-                    className="row"
+                    className= 'pretty_container'
                     ),
-                    # Update loop component 
-                    dcc.Interval(
-                        id='interval-component',
-                        interval=clientRefresh*1000,  
-                        n_intervals=0
-                    )
                 ],
-                id="mainContainer",
+                className= 'pretty_container eight columns'
+                )   
+            ],
+            className="row"                
+            ),
+        html.Div([
+            html.P(
+                'App spot definitions:',
                 style={
-                    "display": "flex",
-                    "flex-direction": "column"
-                },
+                    'font-size': '2rem',
+                    'color': '#F9F9F9',
+                    'align': 'left',
+                    }
+                ),
+            html.P(
+                '* Price Levels that make up >= 3% of the volume of the order book shown in the +/-5% and 0.03% away from present market price.' ,
+                style={
+                    'font-size': '1.75rem',
+                    'color': '#F9F9F9',
+                    'align': 'left',
+                    }
+                ),
+            html.P(
+                '* Liquidations above 200,000.00 contracts',
+                style={
+                    'font-size': '1.75rem',
+                    'color': '#F9F9F9',
+                    'align': 'left',
+                    }
+                ),
+            ],
+            className="pretty_container seven columns"
+            ),
+        # Footer
+        html.Div(
+            [
+            html.P(
+            'Designed by canokaue & thomgabriel',
+            style={
+                    # 'padding-left':'65px',
+                    'font-size': '1.5rem',
+                    'color': '#b5c6cc',
+                    'align': 'left',
+                    }
+                ),
+            html.P(
+            'BitMEX Watcher Dashboard v0.1 - © Quan Digital 2020',
+            style={
+                'padding-left':'165px',
+                    'font-size': '1.5rem',
+                    'color': '#b5c6cc',
+                    'align': 'left',
+                    }
+                ),
+            ],
+            id = 'footer',
+            className="row"
+            ),
+            # Update loop component 
+            dcc.Interval(
+                id='interval-component',
+                interval=clientRefresh*1000,
+                n_intervals=0
             )
+        ],
+        id="mainContainer",
+        style={
+            "display": "flex",
+            "flex-direction": "column"
+        },
+    )
         
 
 def fixNan(x, pMin=True):
@@ -485,7 +488,7 @@ def round_sig(x, sig=3, overwrite=0, minimum=0):
         else:
             return round(x, digits)
 
-def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSpot = 0.02):
+def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSpot = 0.03):
     global tables, shape_bid, shape_ask, marketPrice, depth_bid, depth_ask
     order_book = ws.get_current_book()
     ask_tbl = pd.DataFrame(data=order_book['asks'], columns=[
@@ -655,9 +658,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
                                     <= mp), 'colorintensity'].map(str) + ',0)'
     
     tables = final_tbl  # save table data
-
     marketPrice = mp  # save market price
-
     depth_ask = ob_ask
     depth_bid = ob_bid
     
@@ -672,7 +673,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
         if order[2] in [oid[4] for oid in load_orders()]:
             pass
         else:
-            if (float(order[3]) > minVolSpot) and (float(order[0]) not in range(marketPrice*0.0097, marketPrice*1.003)):
+            if (float(order[3]) > minVolSpot) and (float(order[0]) not in range(marketPrice*0.00097, marketPrice*1.0003)):
                 csv_logger.info("%s,%s,%s,%s,%s" %(order[0], order[1], order[2], order[3], marketPrice))
                 continue
             else: 
@@ -864,7 +865,7 @@ def update_Site_data(n):
 # Cyclic upper data update function
 @app.callback([Output('timestamp', 'children'),
             Output('liquidationList', 'children'),
-            Output('tradeList', 'children'),
+            Output('orderList', 'children'),
             Output('symbol', 'children'),
             Output('state', 'children'),
             Output('prevClosePrice', 'children'),
@@ -892,23 +893,19 @@ def update_metrics(n):
             liquidations = [liq for liq in liquidations if float(liq[6]) > 200000]
     except:
         liquidations = []   
-    try:
-        with open(DATA_DIR + 'trade/trade' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
-            readcsv = csv.reader(f, delimiter=',')
-            trades = [row for row in readcsv][1:]
-    except:
-        trades = []
+    
+    orders = load_orders()
     
     liquidationList = ['('+ liq[1] +') Liquidated ' + ('Short: ' if liq[4] == ' Buy' else 'Long: ')  + str("{:,}".format(round(float(liq[6]), 2))) 
                         + ' Contracts at $' + str("{:,}".format(float(liq[5]))) + '\n'  for liq in liquidations]
 
-    tradeList = ['('+ trade[1] +') ' + str("{:,}".format(round(float(trade[6]), 2))) + ' Contracts ' + ('bought' if trade[4] == ' Buy' else 'sold') 
-                  + ' at $' + str("{:,}".format(float(trade[5]))) + '\n' for trade in trades]
+    orderList = ['('+ order[1] +') ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
+                    ' at $' + order[2] + ' level' +  '\n' for order in orders]
 
     return [
         str('Last updated: ' + dt.datetime.today().strftime('%Y-%m-%d')),
         liquidationList,
-        tradeList,
+        orderList,
         statusData['symbol'],
         statusData['state'],
         statusData['prevClosePrice'],
@@ -951,8 +948,8 @@ if __name__ =='__main__':
         Thread(target= run_frontdata).start()
         Thread(target= run_calc_data).start()
         sleep(2)
-        Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
-        # Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
+        # Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
+        Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()

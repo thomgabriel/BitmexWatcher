@@ -38,7 +38,7 @@ def is_file_empty(file_path):
 
 class BitMEXWebsocket:
 
-    def __init__(self, wsURL = 'wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,trade:XBTUSD'):
+    def __init__(self, wsURL = 'wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,announcement,tradeBin1m:XBTUSD'):
         '''Connect to the websocket and initialize data stores.'''
         self.logger = logging.getLogger(__name__)
         self.logger.debug("Initializing WebSocket.")
@@ -48,7 +48,7 @@ class BitMEXWebsocket:
         self.exited = False
 
         self.liquidation_logger, log_path = setup_db('liquidation', getPath=True)
-        self.trade_logger, log_path = setup_db('trade', getPath=True)
+        self.announcement_logger, log_path = setup_db('announcement', getPath=True)
         
         if log_path:
             if is_file_empty(log_path):
@@ -122,11 +122,10 @@ class BitMEXWebsocket:
                         data = message['data'][0]
                         self.liquidation_logger.info('%s, %s, %s, %s, %s' % (data['orderID'], data['symbol'], 
                         data['side'], data['price'], data['leavesQty']))
-                    elif table == 'trade':
+                    elif table == 'announcement':
                         data = message['data'][0]
-                        if data['size'] > 1000000:
-                            self.trade_logger.info(' %s, %s, %s, %s, %s' %
-                            (data['trdMatchID'],data['symbol'], data['side'], data['price'], data['size']))
+                        self.announcement_logger.info(' %s, %s, %s' %
+                        (data['id'],data['link'], data['title']))
 
                     if len(self.data[table]) > MAX_TABLE_LEN:
                         self.data[table] = self.data[table][MAX_TABLE_LEN // 2:]    
@@ -149,6 +148,6 @@ class BitMEXWebsocket:
 
     def write_headers(self):
         self.liquidation_logger.info('%s, %s, %s, %s, %s' % ('orderID', 'symbol','side','price','leavesQty'))
-        self.trade_logger.info('%s, %s, %s, %s, %s' % ('trdMatchID', 'symbol','side','price','size'))
+        self.announcement_logger.info('%s, %s, %s' % ('id', 'link','title'))
 
 
