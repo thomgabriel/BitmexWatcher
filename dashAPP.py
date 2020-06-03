@@ -91,7 +91,7 @@ def create_dirs():
         os.mkdir(DATA_DIR + 'liquidation_telegram')
         os.mkdir(DATA_DIR + 'order_telegram')
         os.mkdir(DATA_DIR + 'announcement')
-        os.mkdir(DATA_DIR + 'announcement_telegram')
+        os.mkdir(DATA_DIR + 'announcements_telegram')
 
         print("Directories created.")    
          
