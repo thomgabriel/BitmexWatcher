@@ -419,6 +419,25 @@ app.layout = html.Div(
             ],
             className="pretty_container seven columns"
             ),
+
+        html.Div([
+            html.Div([
+                html.Div([
+                    html.H4("BitMEX's Announcements:"),
+                    html.H6(
+                        className="info_text",
+                        id = "announcementList",
+                        style={'whiteSpace': 'pre-wrap'}
+                        )
+                    ],
+                    className= 'pretty_container'
+                    ),],
+                    className= 'pretty_container seven columns'
+                    ),
+            ],
+            className="row"                
+            ),
+
         # Footer
         html.Div(
             [
@@ -885,7 +904,8 @@ def update_Site_data(n):
             [Input('interval-component', 'n_intervals')])
 def update_metrics(n):
     statusData = frontdata
-
+    orders = load_orders()
+    
     try:
         with open(DATA_DIR + 'liquidation/liquidation' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
@@ -894,18 +914,26 @@ def update_metrics(n):
     except:
         liquidations = []   
     
-    orders = load_orders()
+    try:
+        with open(DATA_DIR + 'announcements/announcements' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+            readcsv = csv.reader(f, delimiter=',')
+            announcements = [row for row in readcsv][1:]
+    except:
+        announcements = []
     
     liquidationList = ['('+ liq[1] +') Liquidated ' + ('Short: ' if liq[4] == ' Buy' else 'Long: ')  + str("{:,}".format(round(float(liq[6]), 2))) 
                         + ' Contracts at $' + str("{:,}".format(float(liq[5]))) + '\n'  for liq in liquidations]
 
     orderList = ['('+ order[1] +') ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
                     ' at $' + order[2] + ' level' +  '\n' for order in orders]
+    
+    announcementList = ['('+ anun[1] +') ' + anun[4] for anun in announcements]
 
     return [
         str('Last updated: ' + dt.datetime.today().strftime('%Y-%m-%d')),
         liquidationList,
         orderList,
+        announcementList,
         statusData['symbol'],
         statusData['state'],
         statusData['prevClosePrice'],
