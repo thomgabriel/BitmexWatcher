@@ -82,8 +82,8 @@ class BitMEXWebsocket:
         '''Handler for parsing WS messages.'''
         message = json.loads(message)
 
-        self.liquidation_logger = setup_db('liquidation')
-        self.announcement_logger = setup_db('announcement')
+        liquidation_logger = setup_db('liquidation')
+        announcement_logger = setup_db('announcement')
         
         table = message['table'] if 'table' in message else None
         action = message['action'] if 'action' in message else None
@@ -104,11 +104,11 @@ class BitMEXWebsocket:
                     
                     if table == 'liquidation':
                         data = message['data'][0]
-                        self.liquidation_logger.info('%s, %s, %s, %s, %s' % (data['orderID'], data['symbol'], 
+                        liquidation_logger.info('%s, %s, %s, %s, %s' % (data['orderID'], data['symbol'], 
                         data['side'], data['price'], data['leavesQty']))
                     elif table == 'announcement':
                         data = message['data'][0]
-                        self.announcement_logger.info(' %s, %s, %s' %
+                        announcement_logger.info(' %s, %s, %s' %
                         (data['id'],data['link'], data['title']))
 
                     if len(self.data[table]) > MAX_TABLE_LEN:

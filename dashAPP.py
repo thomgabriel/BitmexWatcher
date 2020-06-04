@@ -924,7 +924,7 @@ def update_metrics(n):
     liquidationList = ['('+ liq[1] +') Liquidated ' + ('Short: ' if liq[4] == ' Buy' else 'Long: ')  + str("{:,}".format(round(float(liq[6]), 2))) 
                         + ' Contracts at $' + str("{:,}".format(float(liq[5]))) + '\n'  for liq in liquidations]
 
-    orderList = ['('+ order[1] +') ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
+    orderList = ['('+ order[1] +') ' + order[3] + ' XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
                     ' at $' + order[2] + ' level' +  '\n' for order in orders]
     
     announcementList = ['('+ anun[1] +') ' + anun[4] for anun in announcements]
