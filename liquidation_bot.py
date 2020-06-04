@@ -16,6 +16,7 @@ DATA_DIR = 'data/'
 
 liquidations = []
 announcements = []
+ws = BitMEXWebsocket()
 
 def setup_db(name, extension='.csv'):
     """Setup writer that formats data to csv, supports multiple instances with no overlap."""
@@ -36,9 +37,7 @@ def setup_db(name, extension='.csv'):
         logger.addHandler(handler)
     return logger
 
-liquidation_logger = setup_db('liquidation_telegram')
-announcements_logger = setup_db('announcements_telegram')
-ws = BitMEXWebsocket()
+
 
 def send_group_message(msg):
 	bot = telegram.Bot(token=TOKEN_CHATBOT)
@@ -69,6 +68,8 @@ def InitialiseBot():
    
     while (True):
         load_orders()
+        liquidation_logger = setup_db('liquidation_telegram')
+        announcements_logger = setup_db('announcements_telegram')
         
         # Daily Report
         schedule.every().day.at("23:59").do(send_group_message,
