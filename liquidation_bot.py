@@ -83,7 +83,8 @@ def InitialiseBot():
         str(len([order for order in liquidations if order[4] == ' Buy'])) + ' Short contracts Liquidated. ' + '\n' + '\n' +
 
         '🍎 $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations if order[4] == ' Sell']),2))) + ' in ' +  
-        str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.')).run_pending()
+        str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.'))
+        schedule.run_pending()
 
         try:
             with open(DATA_DIR + 'liquidation_telegram/liquidation_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
