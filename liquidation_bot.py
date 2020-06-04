@@ -49,14 +49,14 @@ def load_orders():
     try:
         with open(DATA_DIR + 'liquidation/liquidation' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
-            liquidations = [row for row in readcsv][1:]
+            liquidations = [row for row in readcsv]
     except:
         liquidations = []  
 
     try:
         with open(DATA_DIR + 'announcements/announcements' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
-            announcements = [row for row in readcsv][1:]
+            announcements = [row for row in readcsv]
     except:
         announcements = []       
     return 
