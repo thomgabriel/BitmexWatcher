@@ -8,17 +8,15 @@ import urllib
 import math
 from logging.handlers import RotatingFileHandler
 from datetime import datetime as dt
-import os
 import csv
 
 DATA_DIR = 'data/'
 MAX_TABLE_LEN = 200
 
-def setup_db(name, extension='.csv', getPath = False):
+def setup_db(name, extension='.csv'):
     """Setup writer that formats data to csv, supports multiple instances with no overlap."""
     formatter = logging.Formatter(fmt='%(asctime)s,%(message)s', datefmt='%d-%m-%y,%H:%M:%S')
-    date = dt.today().strftime('%Y-%m-%d')
-    db_path = str(DATA_DIR + name + '/' + name + '_' + date + extension)
+    db_path = str(DATA_DIR + name + '/' + name + '_' + dt.today().strftime('%Y-%m-%d') + extension)
 
     handler = RotatingFileHandler(db_path, backupCount=1)
     handler.setFormatter(formatter)
@@ -26,15 +24,6 @@ def setup_db(name, extension='.csv', getPath = False):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
-
-    if getPath:
-        return logger, db_path
-    else:
-        return logger
-
-def is_file_empty(file_path):
-    """ Check if file is empty by confirming if its size is 0 bytes"""
-    return os.path.exists(file_path) and os.stat(file_path).st_size == 0
 
 class BitMEXWebsocket:
 
@@ -47,14 +36,6 @@ class BitMEXWebsocket:
         self.keys = {}
         self.exited = False
 
-        self.liquidation_logger, log_path = setup_db('liquidation', getPath=True)
-        self.announcement_logger, log_path = setup_db('announcement', getPath=True)
-        
-        if log_path:
-            if is_file_empty(log_path):
-                self.logger.debug('Files empty, writing headers.')
-                self.write_headers()
-        
         # We can subscribe right in the connection querystring, so let's build that.
         # Subscribe to all pertinent endpoints
         
@@ -100,6 +81,9 @@ class BitMEXWebsocket:
      
         '''Handler for parsing WS messages.'''
         message = json.loads(message)
+
+        self.liquidation_logger = setup_db('liquidation')
+        self.announcement_logger = setup_db('announcement')
         
         table = message['table'] if 'table' in message else None
         action = message['action'] if 'action' in message else None
@@ -146,8 +130,5 @@ class BitMEXWebsocket:
         '''Called on websocket close.'''
         self.logger.info('Websocket Closed')
 
-    def write_headers(self):
-        self.liquidation_logger.info('%s, %s, %s, %s, %s' % ('orderID', 'symbol','side','price','leavesQty'))
-        self.announcement_logger.info('%s, %s, %s' % ('id', 'link','title'))
 
 

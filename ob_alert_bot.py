@@ -12,7 +12,7 @@ TOKEN_CHATBOT = "1221497425:AAG_mEqgR-AtLKUZL6Jq3SA3UxvBRRwKIFs"
 GROUP_CHAT_ID = "-1001373929421"
 DATA_DIR = 'data/'
 
-def setup_db(name, extension='.csv', getPath = False):
+def setup_db(name, extension='.csv'):
     """Setup writer that formats data to csv, supports multiple instances with no overlap."""
     formatter = logging.Formatter(fmt='%(asctime)s,%(message)s', datefmt='%d-%m-%y,%H:%M:%S')
     date = dt.datetime.today().strftime('%Y-%m-%d')
@@ -29,11 +29,6 @@ def setup_db(name, extension='.csv', getPath = False):
         logger.addHandler(handler)
     else:
         logger.addHandler(handler)
-    
-    if getPath:
-        return logger, db_path
-    else:
-        return logger
 
 def send_group_message(msg):
 	bot = telegram.Bot(token=TOKEN_CHATBOT)

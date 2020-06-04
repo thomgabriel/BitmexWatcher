@@ -66,9 +66,12 @@ def InitialiseBot():
     print('QuanLiquidationBot is running...')
     updater = Updater(TOKEN_CHATBOT, use_context=True)
     updater.start_polling()
-
-    # Daily Report
-    schedule.every().day.at("23:59").do(send_group_message,
+   
+    while (True):
+        load_orders()
+        
+        # Daily Report
+        schedule.every().day.at("23:59").do(send_group_message,
         'Liquidation Daily Report:' + '\n' +
         ('⛔️⛔️⛔️' if (sum([float(order[6]) for order in liquidations if order[4] == ' Buy'])) < (sum([float(order[6]) for order in liquidations 
         if order[4] == ' Sell'])) else '❎❎❎' + '\n' + '\n' +
@@ -80,11 +83,7 @@ def InitialiseBot():
         str(len([order for order in liquidations if order[4] == ' Buy'])) + ' Short contracts Liquidated. ' + '\n' + '\n' +
 
         '🍎 $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations if order[4] == ' Sell']),2))) + ' in ' +  
-        str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.'))
-        
-    while (True):
-        load_orders()
-        schedule.run_pending()
+        str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.')).run_pending()
 
         try:
             with open(DATA_DIR + 'liquidation_telegram/liquidation_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
