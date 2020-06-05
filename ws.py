@@ -16,7 +16,8 @@ MAX_TABLE_LEN = 200
 def setup_db(name, extension='.csv'):
     """Setup writer that formats data to csv, supports multiple instances with no overlap."""
     formatter = logging.Formatter(fmt='%(asctime)s,%(message)s', datefmt='%d-%m-%y,%H:%M:%S')
-    db_path = str(DATA_DIR + name + '/' + name + '_' + dt.today().strftime('%Y-%m-%d') + extension)
+    date = dt.today().strftime('%Y-%m-%d')
+    db_path = str(DATA_DIR + name + '/' + name + '_' + date + extension)
 
     handler = RotatingFileHandler(db_path, backupCount=1)
     handler.setFormatter(formatter)
@@ -24,6 +25,8 @@ def setup_db(name, extension='.csv'):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
+
+    return logger
 
 class BitMEXWebsocket:
 
@@ -82,9 +85,9 @@ class BitMEXWebsocket:
         '''Handler for parsing WS messages.'''
         message = json.loads(message)
 
-        liquidation_logger = setup_db('liquidation')
-        announcement_logger = setup_db('announcement')
-        
+        self.liquidation_logger = setup_db('liquidation')
+        self.announcement_logger = setup_db('announcement')
+
         table = message['table'] if 'table' in message else None
         action = message['action'] if 'action' in message else None
         try:
@@ -104,11 +107,11 @@ class BitMEXWebsocket:
                     
                     if table == 'liquidation':
                         data = message['data'][0]
-                        liquidation_logger.info('%s, %s, %s, %s, %s' % (data['orderID'], data['symbol'], 
+                        self.liquidation_logger.info('%s, %s, %s, %s, %s' % (data['orderID'], data['symbol'], 
                         data['side'], data['price'], data['leavesQty']))
                     elif table == 'announcement':
                         data = message['data'][0]
-                        announcement_logger.info(' %s, %s, %s' %
+                        self.announcement_logger.info(' %s, %s, %s' %
                         (data['id'],data['link'], data['title']))
 
                     if len(self.data[table]) > MAX_TABLE_LEN:

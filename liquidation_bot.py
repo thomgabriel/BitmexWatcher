@@ -74,7 +74,7 @@ def InitialiseBot():
         # Daily Report
         schedule.every().day.at("23:59").do(send_group_message,
         'Liquidation Daily Report:' + '\n' +
-        ('⛔️⛔️⛔️' if (sum([float(order[6]) for order in liquidations if order[4] == ' Buy'])) < (sum([float(order[6]) for order in liquidations 
+        ('⛔️⛔️⛔️') if (sum([float(order[6]) for order in liquidations if order[4] == ' Buy']) < sum([float(order[6]) for order in liquidations 
         if order[4] == ' Sell'])) else '❎❎❎' + '\n' + '\n' +
 
         str(len(liquidations)) + ' Liquidations in total today worth $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations]),2))) 
@@ -84,7 +84,7 @@ def InitialiseBot():
         str(len([order for order in liquidations if order[4] == ' Buy'])) + ' Short contracts Liquidated. ' + '\n' + '\n' +
 
         '🍎 $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations if order[4] == ' Sell']),2))) + ' in ' +  
-        str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.'))
+        str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.')
         schedule.run_pending()
 
         try:
