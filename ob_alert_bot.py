@@ -29,6 +29,7 @@ def setup_db(name, extension='.csv'):
         logger.addHandler(handler)
     else:
         logger.addHandler(handler)
+    return logger
 
 def send_group_message(msg):
 	bot = telegram.Bot(token=TOKEN_CHATBOT)
@@ -46,12 +47,12 @@ def load_orders():
 def InitialiseBot():
     
     print('QuanOrderBot is running...')
+    csv_logger = setup_db('order_telegram')
     
     updater = Updater(TOKEN_CHATBOT, use_context=True)
     updater.start_polling()
     while True:
-        sleep(5)
-        csv_logger = setup_db('order_telegram')
+
         try:
             with open(DATA_DIR + 'order_telegram/order_telegram' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
                 readcsv = csv.reader(f, delimiter=',')
@@ -65,32 +66,32 @@ def InitialiseBot():
             else:
                 if float(order[5]) >= 0.08:
                     send_group_message(
-                    '🐋🚨🚨🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
+                    '🐋🚨🚨🚨🚨🦏' + '\n' + 'There is ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
                 elif 0.07<= float(order[5]) < 0.08:
                     send_group_message(
-                    '🐋🚨🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
+                    '🐋🚨🚨🚨🦏' + '\n' + 'There is ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
                 elif 0.06<= float(order[5]) < 0.07:
                     send_group_message(
-                    '🐋🚨🚨🦏' + '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
+                    '🐋🚨🚨🦏' + '\n' + 'There is ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
                 elif 0.05<= float(order[5]) < 0.06:
                     send_group_message(
-                    '🐋🚨🦏' '\n' + 'There is a ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
+                    '🐋🚨🦏' '\n' + 'There is ' + order[3] + ' #XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round(((float(order[2])-float(order[6]))/float(order[6])*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
-
+        sleep(5)
 if __name__ == '__main__':
     InitialiseBot()

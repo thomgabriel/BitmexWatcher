@@ -30,7 +30,7 @@ def setup_db(name, extension='.csv'):
 
 class BitMEXWebsocket:
 
-    def __init__(self, wsURL = 'wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,announcement,tradeBin1m:XBTUSD'):
+    def __init__(self, wsURL = 'wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,announcement,trade:XBTUSD'):
         '''Connect to the websocket and initialize data stores.'''
         self.logger = logging.getLogger(__name__)
         self.logger.debug("Initializing WebSocket.")
@@ -41,6 +41,8 @@ class BitMEXWebsocket:
 
         # We can subscribe right in the connection querystring, so let's build that.
         # Subscribe to all pertinent endpoints
+        self.liquidation_logger = setup_db('liquidation')
+        self.announcement_logger = setup_db('announcement')
         
         self.logger.info("Connecting to %s" % wsURL)
         self.__connect(wsURL)
@@ -84,9 +86,6 @@ class BitMEXWebsocket:
      
         '''Handler for parsing WS messages.'''
         message = json.loads(message)
-
-        self.liquidation_logger = setup_db('liquidation')
-        self.announcement_logger = setup_db('announcement')
 
         table = message['table'] if 'table' in message else None
         action = message['action'] if 'action' in message else None

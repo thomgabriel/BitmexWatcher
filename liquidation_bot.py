@@ -14,9 +14,9 @@ TOKEN_CHATBOT = "1009370354:AAHSwXPOTYJ1fnHRDETw9W9JrJWF96CvRQ8"
 GROUP_CHAT_ID = "-1001373929421"
 DATA_DIR = 'data/'
 
+ws = BitMEXWebsocket()
 liquidations = []
 announcements = []
-ws = BitMEXWebsocket()
 
 def setup_db(name, extension='.csv'):
     """Setup writer that formats data to csv, supports multiple instances with no overlap."""
@@ -36,8 +36,6 @@ def setup_db(name, extension='.csv'):
     else:
         logger.addHandler(handler)
     return logger
-
-
 
 def send_group_message(msg):
 	bot = telegram.Bot(token=TOKEN_CHATBOT)
@@ -59,25 +57,15 @@ def load_orders():
     except:
         announcements = []       
     return 
-        
-def InitialiseBot():
-    
-    print('QuanLiquidationBot is running...')
-    updater = Updater(TOKEN_CHATBOT, use_context=True)
-    updater.start_polling()
-   
-    while (True):
-        load_orders()
-        liquidation_logger = setup_db('liquidation_telegram')
-        announcements_logger = setup_db('announcements_telegram')
-        
-        # Daily Report
-        schedule.every().day.at("23:59").do(send_group_message,
+
+def dailymessage():
+    load_orders()
+    dailymessage = (
         'Liquidation Daily Report:' + '\n' +
         ('⛔️⛔️⛔️') if (sum([float(order[6]) for order in liquidations if order[4] == ' Buy']) < sum([float(order[6]) for order in liquidations 
-        if order[4] == ' Sell'])) else '❎❎❎' + '\n' + '\n' +
+        if order[4] == ' Sell'])) else ('❎❎❎') + '\n' + '\n' +
 
-        str(len(liquidations)) + ' Liquidations in total today worth $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations]),2))) 
+        str(len(liquidations)) + ' Liquidations in total today, worth $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations]),2))) 
         + '.' + '\n' + '\n' +
 
         '🍏 $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations if order[4] == ' Buy']),2))) + ' in ' +  
@@ -85,6 +73,22 @@ def InitialiseBot():
 
         '🍎 $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations if order[4] == ' Sell']),2))) + ' in ' +  
         str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.')
+    return dailymessage
+ 
+def InitialiseBot():
+    
+    print('QuanLiquidationBot is running...')
+    updater = Updater(TOKEN_CHATBOT, use_context=True)
+    updater.start_polling()
+
+    liquidation_logger = setup_db('liquidation_telegram')
+    announcements_logger = setup_db('announcements_telegram')
+
+   # Daily Report
+    schedule.every().day.at("23:59").do(send_group_message, dailymessage())   
+
+    while (True):
+        load_orders()
         schedule.run_pending()
 
         try:
@@ -122,7 +126,7 @@ def InitialiseBot():
                 pass
             else:
                 send_group_message(
-                    '❗️❗️❗️' + '\n' + '**' + anun[4] + '**' + '\n' + 'Link: ' + anun[3] + '.'
+                    '❗️❗️❗️' + '\n' + '**' + anun[4] + '.**' + '\n' + 'Link: ' + anun[3]
                 )
 
         sleep(5)
