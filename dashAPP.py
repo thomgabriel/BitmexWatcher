@@ -976,8 +976,8 @@ if __name__ =='__main__':
         Thread(target= run_frontdata).start()
         Thread(target= run_calc_data).start()
         sleep(2)
-        Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
-        # Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
+        # Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
+        Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()
