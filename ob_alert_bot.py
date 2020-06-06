@@ -6,6 +6,7 @@ import datetime as dt
 from time import sleep
 from logging.handlers import RotatingFileHandler
 import os
+import sys
 import bitmex
 
 TOKEN_CHATBOT = "1221497425:AAG_mEqgR-AtLKUZL6Jq3SA3UxvBRRwKIFs"
@@ -23,12 +24,7 @@ def setup_db(name, extension='.csv'):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-
-    if (logger.hasHandlers()):
-        logger.handlers.clear()
-        logger.addHandler(handler)
-    else:
-        logger.addHandler(handler)
+    logger.addHandler(handler)
     return logger
 
 def send_group_message(msg):
@@ -51,14 +47,21 @@ def InitialiseBot():
     
     updater = Updater(TOKEN_CHATBOT, use_context=True)
     updater.start_polling()
+
     while True:
 
+        # If day changes, restart
+        ord_path = str(DATA_DIR + 'order_telegram/order_telegram' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv')
+        if not(os.path.exists(ord_path)):
+            csv_logger.removeHandler(csv_logger.handlers[0])
+            csv_logger = setup_db('order_telegram')
+            
         try:
             with open(DATA_DIR + 'order_telegram/order_telegram' + '_' + dt.datetime.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
                 readcsv = csv.reader(f, delimiter=',')
                 orderscsv = [row[2] for row in readcsv]
         except:
-            ordercsv = []
+            orderscsv = []
 
         for order in load_orders():
             if order[4] in orderscsv:
@@ -94,4 +97,9 @@ def InitialiseBot():
                     sleep(1)
         sleep(5)
 if __name__ == '__main__':
-    InitialiseBot()
+    try:
+        InitialiseBot()
+    
+    except (KeyboardInterrupt, SystemExit):
+            send_group_message('Error')
+            sys.exit()

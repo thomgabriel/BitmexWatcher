@@ -3,6 +3,7 @@ from telegram.ext import Updater
 import logging
 import csv
 from datetime import datetime as dt
+import datetime
 from time import sleep
 from logging.handlers import RotatingFileHandler
 import os
@@ -29,12 +30,7 @@ def setup_db(name, extension='.csv'):
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-
-    if (logger.hasHandlers()):
-        logger.handlers.clear()
-        logger.addHandler(handler)
-    else:
-        logger.addHandler(handler)
+    logger.addHandler(handler)
     return logger
 
 def send_group_message(msg):
@@ -49,7 +45,6 @@ def load_orders():
             liquidations = [row for row in readcsv]
     except:
         liquidations = []  
-
     try:
         with open(DATA_DIR + 'announcements/announcements' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
@@ -59,20 +54,28 @@ def load_orders():
     return 
 
 def dailymessage():
-    load_orders()
+    
+    try:
+        with open(DATA_DIR + 'liquidation/liquidation' + '_' + (dt.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+            readcsv = csv.reader(f, delimiter=',')
+            m_liquidations = [row for row in readcsv]
+    except:
+        m_liquidations = [] 
+
     dailymessage = (
         'Liquidation Daily Report:' + '\n' +
-        ('⛔️⛔️⛔️') if (sum([float(order[6]) for order in liquidations if order[4] == ' Buy']) < sum([float(order[6]) for order in liquidations 
+        ('⛔️⛔️⛔️') if (sum([float(order[6]) for order in m_liquidations if order[4] == ' Buy']) < sum([float(order[6]) for order in m_liquidations 
         if order[4] == ' Sell'])) else ('❎❎❎') + '\n' + '\n' +
 
-        str(len(liquidations)) + ' Liquidations in total today, worth $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations]),2))) 
+        str(len(m_liquidations)) + ' Liquidations in total today, worth $' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations]),2))) 
         + '.' + '\n' + '\n' +
 
-        '🍏 $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations if order[4] == ' Buy']),2))) + ' in ' +  
-        str(len([order for order in liquidations if order[4] == ' Buy'])) + ' Short contracts Liquidated. ' + '\n' + '\n' +
+        '🍏 $' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations if order[4] == ' Buy']),2))) + ' in ' +  
+        str(len([order for order in m_liquidations if order[4] == ' Buy'])) + ' Short contracts Liquidated. ' + '\n' + '\n' +
 
-        '🍎 $' + str("{:,}".format(round(sum([float(order[6]) for order in liquidations if order[4] == ' Sell']),2))) + ' in ' +  
-        str(len([order for order in liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.')
+        '🍎 $' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations if order[4] == ' Sell']),2))) + ' in ' +  
+        str(len([order for order in m_liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.')
+    
     return dailymessage
  
 def InitialiseBot():
@@ -83,14 +86,23 @@ def InitialiseBot():
 
     liquidation_logger = setup_db('liquidation_telegram')
     announcements_logger = setup_db('announcements_telegram')
-
+        
    # Daily Report
-    schedule.every().day.at("23:59").do(send_group_message, dailymessage())   
+    schedule.every().day.at("00:01").do(send_group_message, dailymessage())
 
     while (True):
         load_orders()
         schedule.run_pending()
 
+        # If day changes, restart
+        liq_path = str(DATA_DIR + 'liquidation_telegram/liquidation_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv')
+        ann_path = str(DATA_DIR + 'announcements_telegram/announcements_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv')
+        if not(os.path.exists(liq_path) or os.path.exists(ann_path)):
+            liquidation_logger.removeHandler(liquidation_logger.handlers[0])
+            announcements_logger.announcements_logger(announcements_logger.handlers[0])
+            liquidation_logger = setup_db('liquidation_telegram')
+            announcements_logger = setup_db('announcements_telegram')
+        
         try:
             with open(DATA_DIR + 'liquidation_telegram/liquidation_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv' , 'r') as f:
                 readcsv = csv.reader(f, delimiter=',')
@@ -128,6 +140,7 @@ def InitialiseBot():
                 send_group_message(
                     '❗️❗️❗️' + '\n' + '**' + anun[4] + '.**' + '\n' + 'Link: ' + anun[3]
                 )
+                announcements_logger.info("%s" %(order[2]))
 
         sleep(5)
                        

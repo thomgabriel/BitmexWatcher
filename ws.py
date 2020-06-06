@@ -9,6 +9,7 @@ import math
 from logging.handlers import RotatingFileHandler
 from datetime import datetime as dt
 import csv
+import os
 
 DATA_DIR = 'data/'
 MAX_TABLE_LEN = 200
@@ -25,7 +26,6 @@ def setup_db(name, extension='.csv'):
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
-
     return logger
 
 class BitMEXWebsocket:
@@ -39,11 +39,9 @@ class BitMEXWebsocket:
         self.keys = {}
         self.exited = False
 
-        # We can subscribe right in the connection querystring, so let's build that.
-        # Subscribe to all pertinent endpoints
         self.liquidation_logger = setup_db('liquidation')
         self.announcement_logger = setup_db('announcement')
-        
+
         self.logger.info("Connecting to %s" % wsURL)
         self.__connect(wsURL)
         self.logger.info('Connected to WS.')
@@ -81,11 +79,19 @@ class BitMEXWebsocket:
         if not conn_timeout:
             self.logger.error("Couldn't connect to WS! Exiting.")
             self.reset()
-
+        
     def __on_message(self, message):
-     
         '''Handler for parsing WS messages.'''
         message = json.loads(message)
+
+        # If day changes, restart
+        liq_path = str(DATA_DIR + 'liquidation/liquidation' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv')
+        ann_path = str(DATA_DIR + 'announcements/announcements' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv')
+        if not(os.path.exists(liq_path) or os.path.exists(ann_path)):
+            self.liquidation_logger.removeHandler(self.liquidation_logger.handlers[0])
+            self.announcement_logger.removeHandler(self.announcement_logger.handlers[0])
+            self.liquidation_logger = setup_db('liquidation')
+            self.announcement_logger = setup_db('announcement')
 
         table = message['table'] if 'table' in message else None
         action = message['action'] if 'action' in message else None
