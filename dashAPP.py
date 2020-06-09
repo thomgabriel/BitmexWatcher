@@ -693,7 +693,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
         if order[2] in [oid[4] for oid in load_orders()]:
             pass
         else:
-            if (float(order[3]) > minVolSpot) and (float(order[0]) not in np.arange(marketPrice*0.995,marketPrice*1.005, 0.01)):
+            if (float(order[3]) > minVolSpot) and (float(order[0]) not in np.arange(round(marketPrice*0.995,1),round(marketPrice*1.005,1), 0.1)):
                 csv_logger.info("%s,%s,%s,%s,%s" %(order[0], order[1], order[2], order[3], marketPrice))
                 continue
             else: 
