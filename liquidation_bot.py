@@ -88,7 +88,7 @@ def InitialiseBot():
     announcements_logger = setup_db('announcements_telegram')
         
    # Daily Report
-    schedule.every().day.at("01:00").do(send_group_message, dailymessage())
+    schedule.every().day.at("00:01").do(send_group_message, dailymessage())
 
     while (True):
         load_orders()
@@ -149,5 +149,4 @@ if __name__ == '__main__':
         InitialiseBot()
     
     except (KeyboardInterrupt, SystemExit):
-            send_group_message('Error')
             sys.exit()
