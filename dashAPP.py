@@ -171,7 +171,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -182,7 +182,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -193,7 +193,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -204,7 +204,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -215,29 +215,29 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("Turn Over"),
+                                        html.P("Turnover"),
                                         html.H6(
                                             id="turnover",
                                             className="info_text"
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("Mark Price"),
+                                        html.P("Prev. Close"),
                                         html.H6(
-                                            id="markPrice",
+                                            id="prevClosePrice",
                                             className="info_text"
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -248,7 +248,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                             ],
                             id="btcInfo",
@@ -266,7 +266,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -277,7 +277,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -288,7 +288,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -299,7 +299,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -310,29 +310,29 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("Turn Over 24h"),
+                                        html.P("Turnover 24h"),
                                         html.H6(
                                             id="turnover24h",
                                             className="info_text"
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
-                                        html.P("Previous Close Price"),
+                                        html.P("Mark Price"),
                                         html.H6(
-                                            id="prevClosePrice",
+                                            id="markPrice",
                                             className="info_text"
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 ),
                                 html.Div(
                                     [
@@ -343,7 +343,7 @@ app.layout = html.Div(
                                         )
                                     ],
                                     id="",
-                                    className="pretty_container two columns"
+                                    className="pretty_container one-half columns"
                                 )
                             ],
                             id="infoContainer",
@@ -370,10 +370,10 @@ app.layout = html.Div(
                         style={'whiteSpace': 'pre-wrap'},
                         ),
                     ],
-                    className= 'pretty_container'
+                    # className= 'pretty_container'
                     ),
                 ],
-                className= 'pretty_container eight columns'
+                className= 'pretty_container seven columns'
                 ), 
             html.Div([
                 html.Div([
@@ -384,10 +384,10 @@ app.layout = html.Div(
                         style={'whiteSpace': 'pre-wrap'}
                         )
                     ],
-                    className= 'pretty_container'
+                    # className= 'pretty_container'
                     ),
                 ],
-                className= 'pretty_container eight columns'
+                className= 'pretty_container nine columns'
                 ),  
             ],
             className="row"                
@@ -977,8 +977,8 @@ if __name__ =='__main__':
         Thread(target= run_frontdata).start()
         Thread(target= run_calc_data).start()
         sleep(2)
-        # Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
-        Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
+        Thread(target= app.server.run(host= '0.0.0.0', threaded= True)).start
+        # Thread(target = app.server.run(host= '0.0.0.0', threaded= True, port= '80')).start()
         
     except (KeyboardInterrupt, SystemExit):
         sys.exit()

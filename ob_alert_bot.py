@@ -101,5 +101,4 @@ if __name__ == '__main__':
         InitialiseBot()
     
     except (KeyboardInterrupt, SystemExit):
-            send_group_message('Error')
             sys.exit()
