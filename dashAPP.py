@@ -109,7 +109,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H2(
-                            'BitMEX Watcher - Dashboard V0.1',
+                            'BitMEX Watcher - Dashboard V1.0',
                             style={'padding-left':'65px',
                                     'padding-top' : '20px'}
 
@@ -393,6 +393,23 @@ app.layout = html.Div(
             className="row"                
             ),
         html.Div([
+            html.Div([
+                html.Div([
+                    html.H4("BitMEX's Announcements:"),
+                    html.H6(
+                        className="info_text",
+                        id = "announcementList",
+                        style={'whiteSpace': 'pre-wrap'}
+                        )
+                    ],
+                    className= 'pretty_container'
+                    ),],
+                    className= 'pretty_container seven columns'
+                    ),
+            ],
+            className="row"                
+            ),
+        html.Div([
             html.P(
                 'App spot definitions:',
                 style={
@@ -420,25 +437,6 @@ app.layout = html.Div(
             ],
             className="pretty_container seven columns"
             ),
-
-        html.Div([
-            html.Div([
-                html.Div([
-                    html.H4("BitMEX's Announcements:"),
-                    html.H6(
-                        className="info_text",
-                        id = "announcementList",
-                        style={'whiteSpace': 'pre-wrap'}
-                        )
-                    ],
-                    className= 'pretty_container'
-                    ),],
-                    className= 'pretty_container seven columns'
-                    ),
-            ],
-            className="row"                
-            ),
-
         # Footer
         html.Div(
             [
@@ -452,7 +450,7 @@ app.layout = html.Div(
                     }
                 ),
             html.P(
-            'BitMEX Watcher Dashboard v0.1 - © Quan Digital 2020',
+            'BitMEX Watcher Dashboard v1.0 - © Quan Digital 2020',
             style={
                 'padding-left':'165px',
                     'font-size': '1.5rem',
