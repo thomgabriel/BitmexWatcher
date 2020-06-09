@@ -64,8 +64,8 @@ def dailymessage():
 
     dailymessage = (
         'Liquidation Daily Report:' + '\n' +
-        ('⛔️⛔️⛔️') if (sum([float(order[6]) for order in m_liquidations if order[4] == ' Buy']) < sum([float(order[6]) for order in m_liquidations 
-        if order[4] == ' Sell'])) else ('❎❎❎') + '\n' + '\n' +
+        (('⛔️⛔️⛔️') if (sum([float(order[6]) for order in m_liquidations if order[4] == ' Buy']) < sum([float(order[6]) for order in m_liquidations 
+        if order[4] == ' Sell'])) else ('❎❎❎')) + '\n' + '\n' +
 
         str(len(m_liquidations)) + ' Liquidations in total today, worth $' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations]),2))) 
         + '.' + '\n' + '\n' +
@@ -88,7 +88,7 @@ def InitialiseBot():
     announcements_logger = setup_db('announcements_telegram')
         
    # Daily Report
-    schedule.every().day.at("00:01").do(send_group_message, dailymessage())
+    schedule.every().day.at("01:00").do(send_group_message, dailymessage())
 
     while (True):
         load_orders()
@@ -99,7 +99,7 @@ def InitialiseBot():
         ann_path = str(DATA_DIR + 'announcements_telegram/announcements_telegram' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv')
         if not(os.path.exists(liq_path) or os.path.exists(ann_path)):
             liquidation_logger.removeHandler(liquidation_logger.handlers[0])
-            announcements_logger.announcements_logger(announcements_logger.handlers[0])
+            announcements_logger.removeHandler(announcements_logger.handlers[0])
             liquidation_logger = setup_db('liquidation_telegram')
             announcements_logger = setup_db('announcements_telegram')
         

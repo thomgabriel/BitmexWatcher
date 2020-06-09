@@ -363,19 +363,6 @@ app.layout = html.Div(
         html.Div([
             html.Div([
                 html.Div([
-                    html.H4('Liquidations:'),
-                    html.H6(
-                        className="info_text",
-                        id = "liquidationList",
-                        style={'whiteSpace': 'pre-wrap'}
-                        )
-                    ],
-                    className= 'pretty_container'
-                    ),],
-                    className= 'pretty_container eight columns'
-                    ),
-            html.Div([
-                html.Div([
                     html.H4('Whales Price Levels:'),
                     html.H6(
                         className="info_text",
@@ -387,7 +374,21 @@ app.layout = html.Div(
                     ),
                 ],
                 className= 'pretty_container eight columns'
-                )   
+                ), 
+            html.Div([
+                html.Div([
+                    html.H4('Liquidations:'),
+                    html.H6(
+                        className="info_text",
+                        id = "liquidationList",
+                        style={'whiteSpace': 'pre-wrap'}
+                        )
+                    ],
+                    className= 'pretty_container'
+                    ),
+                ],
+                className= 'pretty_container eight columns'
+                ),  
             ],
             className="row"                
             ),
@@ -401,7 +402,7 @@ app.layout = html.Div(
                     }
                 ),
             html.P(
-                '* Price Levels that make up >= 3% of the volume of the order book shown in the +/-5% and 0.3% away from present market price.' ,
+                '* Price Levels that make up >= 3% of the volume of the order book shown in the +/-5% and 0.5% away from present market price.' ,
                 style={
                     'font-size': '1.75rem',
                     'color': '#F9F9F9',
@@ -692,7 +693,7 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
         if order[2] in [oid[4] for oid in load_orders()]:
             pass
         else:
-            if (float(order[3]) > minVolSpot) and (float(order[0]) not in np.arange(marketPrice*0.997,marketPrice*1.003, 0.1)):
+            if (float(order[3]) > minVolSpot) and (float(order[0]) not in np.arange(marketPrice*0.995,marketPrice*1.005, 0.01)):
                 csv_logger.info("%s,%s,%s,%s,%s" %(order[0], order[1], order[2], order[3], marketPrice))
                 continue
             else: 

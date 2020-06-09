@@ -52,6 +52,8 @@ class BitMEXWebsocket:
     def reset(self):
         self.logger.warning('Websocket resetting...')
         self.ws.close()
+        self.liquidation_logger.removeHandler(self.liquidation_logger.handlers[0])
+        self.announcement_logger.removeHandler(self.announcement_logger.handlers[0])
         self.logger.info('Weboscket closed.')
         self.logger.info('Restarting...')
         self.__init__()
@@ -88,11 +90,8 @@ class BitMEXWebsocket:
         liq_path = str(DATA_DIR + 'liquidation/liquidation' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv')
         ann_path = str(DATA_DIR + 'announcements/announcements' + '_' + dt.today().strftime('%Y-%m-%d') + '.csv')
         if not(os.path.exists(liq_path) or os.path.exists(ann_path)):
-            self.liquidation_logger.removeHandler(self.liquidation_logger.handlers[0])
-            self.announcement_logger.removeHandler(self.announcement_logger.handlers[0])
-            self.liquidation_logger = setup_db('liquidation')
-            self.announcement_logger = setup_db('announcement')
-
+            self.reset()
+            
         table = message['table'] if 'table' in message else None
         action = message['action'] if 'action' in message else None
         try:
