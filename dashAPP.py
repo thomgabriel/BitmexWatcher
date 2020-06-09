@@ -402,7 +402,7 @@ app.layout = html.Div(
                     }
                 ),
             html.P(
-                '* Price Levels that make up >= 3% of the volume of the order book shown in the +/-5% and 0.5% away from present market price.' ,
+                '* Price Levels that make up >= 5% of the volume of the order book shown in the +/-5% and 0.3% away from present market price.' ,
                 style={
                     'font-size': '1.75rem',
                     'color': '#F9F9F9',
@@ -508,7 +508,7 @@ def round_sig(x, sig=3, overwrite=0, minimum=0):
         else:
             return round(x, digits)
 
-def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSpot = 0.03):
+def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSpot = 0.05):
     global tables, shape_bid, shape_ask, marketPrice, depth_bid, depth_ask
     order_book = ws.get_current_book()
     ask_tbl = pd.DataFrame(data=order_book['asks'], columns=[
@@ -687,13 +687,13 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
     orders = zip([str(price) for price in final_tbl['price']], 
                  [str(size) for size in final_tbl['volume']], 
                  [str(oid) for oid in fulltbl['address']],
-                 [str(round((size/volumewhale),2)) for size in final_tbl['volume']]
+                 [str(round((size/volumewhale),3)) for size in final_tbl['volume']]
                  )
     for order in orders:
         if order[2] in [oid[4] for oid in load_orders()]:
             pass
         else:
-            if (float(order[3]) > minVolSpot) and (float(order[0]) not in np.arange(round(marketPrice*0.995,1),round(marketPrice*1.005,1), 0.1)):
+            if (float(order[3]) > minVolSpot) and (float(order[0]) not in np.arange(round((marketPrice*0.997),0),round((marketPrice*1.003),0), 0.5)):
                 csv_logger.info("%s,%s,%s,%s,%s" %(order[0], order[1], order[2], order[3], marketPrice))
                 continue
             else: 

@@ -30,7 +30,7 @@ def setup_db(name, extension='.csv'):
 
 class BitMEXWebsocket:
 
-    def __init__(self, wsURL = 'wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,announcement,trade:XBTUSD'):
+    def __init__(self, wsURL = 'wss://www.bitmex.com/realtime?subscribe=liquidation:XBTUSD,announcement,trade'):
         '''Connect to the websocket and initialize data stores.'''
         self.logger = logging.getLogger(__name__)
         self.logger.debug("Initializing WebSocket.")
