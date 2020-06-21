@@ -113,7 +113,7 @@ class BitMEXBook:
             except KeyError:
                 continue
             for order in this_ask:
-                result['asks'].append([order['price'],(order['size']/Decimal(order['price'])), order['id']]) #(order['size']/Decimal(order['price']))
+                result['asks'].append([order['price'], order['size'], order['id']]) #(order['size']/Decimal(order['price']))
         # Same procedure for bids
         for bid in self._bids:
             try:
@@ -122,7 +122,7 @@ class BitMEXBook:
                 continue
 
             for order in this_bid:
-                result['bids'].append([order['price'], (order['size']/Decimal(order['price'])), order['id']])  #(order['size']/Decimal(order['price']))
+                result['bids'].append([order['price'], order['size'], order['id']])  #(order['size']/Decimal(order['price']))
         return result
 
     # -----------------------------------------------------------------------------------------

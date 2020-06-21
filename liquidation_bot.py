@@ -54,9 +54,9 @@ def load_orders():
     return 
 
 def dailymessage():
-    
+    yesterday = dt.today() - datetime.timedelta(days= 1)
     try:
-        with open(DATA_DIR + 'liquidation/liquidation' + '_' + (dt.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+        with open(DATA_DIR + 'liquidation/liquidation' + '_' + yesterday.strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
             m_liquidations = [row for row in readcsv]
     except:
@@ -70,11 +70,11 @@ def dailymessage():
         str(len(m_liquidations)) + ' Liquidations in total today, worth $' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations]),2))) 
         + '.' + '\n' + '\n' +
 
-        '🍏 $' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations if order[4] == ' Buy']),2))) + ' in ' +  
-        str(len([order for order in m_liquidations if order[4] == ' Buy'])) + ' Short contracts Liquidated. ' + '\n' + '\n' +
+        '🍏 ' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations if order[4] == ' Buy']),2))) + 'contracts in ' +  
+        str(len([order for order in m_liquidations if order[4] == ' Buy'])) + ' Shorts Liquidated. ' + '\n' + '\n' +
 
-        '🍎 $' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations if order[4] == ' Sell']),2))) + ' in ' +  
-        str(len([order for order in m_liquidations if order[4] == ' Sell'])) + ' Long contracts Liquidated.')
+        '🍎 ' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations if order[4] == ' Sell']),2))) + 'contracts in ' +  
+        str(len([order for order in m_liquidations if order[4] == ' Sell'])) + ' Lonngs Liquidated.')
     
     return dailymessage
  
@@ -123,13 +123,13 @@ def InitialiseBot():
                 else:
                     if order[4] == ' Buy':
                         send_group_message(
-                        '🍏 Liquidated Short: ' + str("{:,}".format(round(float(order[6]), 2))) + ' #XBT Contracts at $' + order[5])
+                        '🍏 Liquidated Short: ' + str("{:,}".format(round(float(order[6]), 2))) + ' #Contracts at $' + order[5])
                         liquidation_logger.info("%s" %(order[2]))
                         sleep(2)
                    
                     if order[4] == ' Sell':
                         send_group_message(
-                        '🍎 Liquidated Long: ' + str("{:,}".format(round(float(order[6]), 2))) + ' #XBT Contracts at $' + order[5])
+                        '🍎 Liquidated Long: ' + str("{:,}".format(round(float(order[6]), 2))) + ' #Contracts at $' + order[5])
                         liquidation_logger.info("%s" %(order[2]))
                         sleep(2)
 

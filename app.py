@@ -568,10 +568,10 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
             (bid_tbl['price'] <= last_bid) & (bid_tbl['price'] > current_bid_border), 'address'].count()
 
         # Prepare Text
-        ask_text = (str(round_sig(current_ask_volume, 3, 0, 2)) + 'XBT' + " (from " + str(current_ask_adresses) +
-                        " levels) up to " + str(round_sig(current_ask_border, 3, 0, 2)) + '$')
-        bid_text = (str(round_sig(current_bid_volume, 3, 0, 2)) + 'XBT' + " (from " + str(current_bid_adresses) +
-                        " levels) down to " + str(round_sig(current_bid_border, 3, 0, 2)) + '$')
+        ask_text = (str("{:,}".format(round_sig(current_ask_volume, 3, 0, 2))) + ' Contracts' + " (from " + str(current_ask_adresses) +
+                        " levels) up to $" + str(round_sig(current_ask_border, 3, 0, 2)))
+        bid_text = (str("{:,}".format(round_sig(current_bid_volume, 3, 0, 2))) + ' Contracts' + " (from " + str(current_bid_adresses) +
+                        " levels) down to $" + str(round_sig(current_bid_border, 3, 0, 2)))
 
         # Save Data
         ob_ask.loc[i - 1] = [current_ask_border, current_ask_volume, current_ask_adresses, ask_text]
@@ -606,10 +606,10 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
     final_tbl['volume'] = final_tbl['volume'].apply(round_sig, args=(1, 2))
     final_tbl['n_unique_orders'] = final_tbl['n_unique_orders'].apply(round_sig, args=(0,))
     final_tbl['sqrt'] = np.sqrt(final_tbl['volume'])
-    final_tbl['total_price'] = (((final_tbl['volume'] * final_tbl['price']).round(2)).apply(lambda x: "{:,}".format(x)))
+    final_tbl['total_price'] = (final_tbl['volume'].round(2)).apply(lambda x: "{:,}".format(x))
 
-    bid_tbl['total_price'] = bid_tbl['volume'] * bid_tbl['price']
-    ask_tbl['total_price'] = ask_tbl['volume'] * ask_tbl['price']
+    bid_tbl['total_price'] = bid_tbl['volume']
+    ask_tbl['total_price'] = ask_tbl['volume']
 
     # # Get Dataset for Volume Grouping
     vol_grp_bid = bid_tbl.groupby(['volume']).agg(
@@ -661,8 +661,8 @@ def calc_data(range=0.05, maxSize=32, minVolumePerc=0.01, ob_points=60, minVolSp
 
     # making the tooltip column for our charts
     final_tbl['text'] = (
-                "There is " + final_tbl['volume'].map(str) + ' XBT at $' + final_tbl['price'].map(str)
-                + ' level, worth $' + final_tbl['total_price'].map(str))
+                "There is " + final_tbl['total_price'].map(str) + ' Contracts at $' + final_tbl['price'].map(str)
+                + ' price level' )
     # determine buys / sells relative to last market price; colors price bubbles based on size
     # Buys are green, Sells are Red. Probably WHALES are highlighted by being brighter, detected by unqiue order count.
     
@@ -715,7 +715,7 @@ def graph_plot():
     ob_bid_max = fixNan(ob_bid['volume'].max(), False)
     ob_ask_max = fixNan(ob_ask['volume'].max(), False)
 
-    x_min = min([ladder_Bid_Min, ladder_Ask_Min, data_min])
+    x_min = min([ladder_Bid_Min, ladder_Ask_Min, data_min]) * 15
     x_max = max([ladder_Bid_Max, ladder_Ask_Max, data_max, ob_ask_max, ob_bid_max])
     max_unique = max([fixNan(shape_bid['unique'].max(), False),
                         fixNan(shape_ask['unique'].max(), False)])
@@ -935,20 +935,20 @@ def update_metrics(n):
         announcementList,
         statusData['symbol'],
         statusData['state'],
-        statusData['prevClosePrice'],
-        statusData['volume'],
-        statusData['volume24h'],
-        statusData['turnover'],
-        statusData['turnover24h'],
-        statusData['highPrice'],
-        statusData['lowPrice'], 
-        statusData['lastPrice'],
-        statusData['bidPrice'],
-        statusData['midPrice'],
-        statusData['askPrice'],
-        statusData['openInterest'],
-        statusData['openValue'],
-        statusData['markPrice']
+        '$' + str("{:,}".format(statusData['prevClosePrice'])),
+        '$' + str("{:,}".format(statusData['volume'])),
+        '$' + str("{:,}".format(statusData['volume24h'])),
+        '$' + str("{:,}".format(statusData['turnover'])),
+        '$' + str("{:,}".format(statusData['turnover24h'])),
+        '$' + str("{:,}".format(statusData['highPrice'])),
+        '$' + str("{:,}".format(statusData['lowPrice'])), 
+        '$' + str("{:,}".format(statusData['lastPrice'])),
+        '$' + str("{:,}".format(statusData['bidPrice'])),
+        '$' + str("{:,}".format(statusData['midPrice'])),
+        '$' + str("{:,}".format(statusData['askPrice'])),
+        '$' + str("{:,}".format(statusData['openInterest'])),
+        '$' + str("{:,}".format(statusData['openValue'])),
+        '$' + str("{:,}".format(statusData['markPrice']))
     ]
 
 def run_calc_data():
