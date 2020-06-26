@@ -99,38 +99,32 @@ def create_dirs():
         print("Directories already exist.")
 
 # Create app layout
-app.layout = html.Div(
-    [
-        dcc.Store(id='aggregate_data'),
-
+app.layout = html.Div([
+    dcc.Store(id='aggregate_data'),
         # Header
-        html.Div(
-            [
-                html.Div(
-                    [
-                        html.H2(
-                            'BitMEX Watcher - Dashboard V1.0',
-                            style={'padding-left':'65px',
-                                    'padding-top' : '20px'}
-
-                        ),
-                        html.H5(
-                            id = 'timestamp',
-                            style={'padding-left':'65px',
-                                    'font-size': '1.5rem'}
-                        ),
-                    ],
-
-                    className='seven columns'
-                ),
-                html.A(
-                    html.Button(
-                        children = "GitHub",
-                        id="github",
-                        style={'box-shadow': '2px 2px 2px lightgrey'}
+        html.Div([
+            html.Div([
+                html.H2(
+                    'BitMEX Watcher - Dashboard V1.0',
+                    style={'padding-left':'65px',
+                            'padding-top' : '20px'}
                     ),
-                    href="https://github.com/quan-digital/whale-watcher",
-                    style = {'margin' : '10px'}
+                html.H5(
+                    id = 'timestamp',
+                    style={'padding-left':'65px',
+                            'font-size': '1.5rem'}
+                    ),
+                ],
+                className='seven columns'
+                ),
+            html.A(
+                html.Button(
+                    children = "GitHub",
+                    id="github",
+                    style={'box-shadow': '2px 2px 2px lightgrey'}
+                ),
+                href="https://github.com/quan-digital/whale-watcher",
+                style = {'margin' : '10px'}
                 ),
                 html.A(
                     html.Button(
@@ -151,225 +145,187 @@ app.layout = html.Div(
                     style = {'margin' : '10px'}
                 ),
             ],
-            id="header",
-            className='row',
-        ),
-        # Upper page components
-        html.Div(
-            [
-                html.Div(
-                    [   
-                        # First info row
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        html.P("Symbol"),
-                                        html.H6(
-                                            id="symbol",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("High Price"),
-                                        html.H6(
-                                            id="highPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Mid Price"),
-                                        html.H6(
-                                            id="midPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Bid Price"),
-                                        html.H6(
-                                            id="bidPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Volume"),
-                                        html.H6(
-                                            id="volume",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Turnover"),
-                                        html.H6(
-                                            id="turnover",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Prev. Close"),
-                                        html.H6(
-                                            id="prevClosePrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Open Interest"),
-                                        html.H6(
-                                            id="openInterest",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                            ],
-                            id="btcInfo",
-                            className="row"
-                        ),
-                        # Second info row
-                        html.Div(
-                            [
-                                html.Div(
-                                    [
-                                        html.P("State"),
-                                        html.H6(
-                                            id="state",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Low Price"),
-                                        html.H6(
-                                            id="lowPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Last Price"), 
-                                        html.H6(
-                                            id="lastPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Ask Price"), 
-                                        html.H6(
-                                            id="askPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Volume 24h"),
-                                        html.H6(
-                                            id="volume24h",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Turnover 24h"),
-                                        html.H6(
-                                            id="turnover24h",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Mark Price"),
-                                        html.H6(
-                                            id="markPrice",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                ),
-                                html.Div(
-                                    [
-                                        html.P("Open Value"), 
-                                        html.H6(
-                                            id="openValue",
-                                            className="info_text"
-                                        )
-                                    ],
-                                    id="",
-                                    className="pretty_container one-half columns"
-                                )
-                            ],
-                            id="infoContainer",
-                            className="row"
-                        ),
-                        # graph overtime plot
-                        html.Div(id='whale_graph', 
-                        children =[ 
-                            dcc.Graph(id='live-graph-' + 'BitMEX' + "-" + 'XBTUSD')
-                            ],
-                            className="pretty_container"
-                        )
-                    ]
-                )
-            ] 
-        ),
-        html.Div([
+        id="header",
+        className='row',
+    ),
+    # Upper page components
+    html.Div([
+        html.Div([   
+            # First info row
             html.Div([
                 html.Div([
-                    html.H4('Whales Price Levels:'),
+                    html.P("Symbol"),
                     html.H6(
-                        className="info_text",
-                        id = "orderList",
-                        style={'whiteSpace': 'pre-wrap'},
-                        ),
+                        id="symbol",
+                        className="info_text"
+                        )
                     ],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("High Price"),
+                    html.H6(
+                        id="highPrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Mid Price"),
+                    html.H6(
+                        id="midPrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Bid Price"),
+                    html.H6(
+                        id="bidPrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Volume"),
+                    html.H6(
+                        id="volume",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Turnover"),
+                    html.H6(
+                        id="turnover",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Prev. Close"),
+                    html.H6(
+                        id="prevClosePrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Open Interest"),
+                    html.H6(
+                        id="openInterest",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+            ],
+            id="btcInfo",
+            className="row"
+            ),
+            # Second info row
+            html.Div([
+                html.Div([
+                    html.P("State"),
+                    html.H6(
+                        id="state",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Low Price"),
+                    html.H6(
+                        id="lowPrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Last Price"), 
+                    html.H6(
+                        id="lastPrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Ask Price"), 
+                    html.H6(
+                        id="askPrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Volume 24h"),
+                    html.H6(
+                        id="volume24h",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Turnover 24h"),
+                    html.H6(
+                        id="turnover24h",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Mark Price"),
+                    html.H6(
+                        id="markPrice",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                ),
+                html.Div([
+                    html.P("Open Value"), 
+                    html.H6(
+                        id="openValue",
+                        className="info_text"
+                    )],
+                id="",
+                className="pretty_container one-half columns"
+                )],
+            id="infoContainer",
+            className="row"
+            ),
+            # graph overtime plot
+            html.Div(id='whale_graph', 
+            children =[ 
+                dcc.Graph(id='live-graph-' + 'BitMEX' + "-" + 'XBTUSD')
+                ],
+            className="pretty_container"
+            )]
+        )]
+    ),
+    html.Div([
+        html.Div([
+            html.Div([
+                html.H4('Whales Price Levels:'),
+                html.H6(
+                    className="info_text",
+                    id = "orderList",
+                    style={'whiteSpace': 'pre-wrap'},
+                    ),
+                ],
                     # className= 'pretty_container'
                     ),
                 ],
@@ -715,7 +671,7 @@ def graph_plot():
     ob_bid_max = fixNan(ob_bid['volume'].max(), False)
     ob_ask_max = fixNan(ob_ask['volume'].max(), False)
 
-    x_min = min([ladder_Bid_Min, ladder_Ask_Min, data_min]) * 15
+    x_min = min([ladder_Bid_Min, ladder_Ask_Min, data_min]) * 10
     x_max = max([ladder_Bid_Max, ladder_Ask_Max, data_max, ob_ask_max, ob_bid_max])
     max_unique = max([fixNan(shape_bid['unique'].max(), False),
                         fixNan(shape_ask['unique'].max(), False)])
@@ -923,8 +879,8 @@ def update_metrics(n):
     liquidationList = ['('+ liq[1] +') Liquidated ' + ('Short: ' if liq[4] == ' Buy' else 'Long: ')  + str("{:,}".format(round(float(liq[6]), 2))) 
                         + ' Contracts at $' + str("{:,}".format(float(liq[5]))) + '\n'  for liq in liquidations]
 
-    orderList = ['('+ order[1] +') ' + order[3] + ' XBT ' + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
-                    ' at $' + order[2] + ' level' +  '\n' for order in orders]
+    orderList = ['('+ order[1] +') ' + str("{:,}".format(round(float(order[3])))) + ('BIDs' if float(order[2]) > float(order[6]) else 'ASKs') + 
+                    ' Contracts at $' + order[2] + ' level' +  '\n' for order in orders]
     
     announcementList = ['('+ anun[1] +') ' + anun[4] for anun in announcements]
 

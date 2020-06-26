@@ -69,28 +69,28 @@ def InitialiseBot():
             else:
                 if float(order[5]) >= 0.08:
                     send_group_message(
-                    '🐋🚨🚨🚨🚨🦏' + '\n' + 'There is ' + order[3] + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
+                    '🐋🚨🚨🚨🚨🦏' + '\n' + 'There is ' + str("{:,}".format(float(order[3]))) + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round((((float(order[2])-float(order[6]))/float(order[6]))*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
                 elif 0.07<= float(order[5]) < 0.08:
                     send_group_message(
-                    '🐋🚨🚨🚨🦏' + '\n' + 'There is ' + order[3] + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
+                    '🐋🚨🚨🚨🦏' + '\n' + 'There is ' + str("{:,}".format(float(order[3]))) + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round((((float(order[2])-float(order[6]))/float(order[6]))*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
                 elif 0.06<= float(order[5]) < 0.07:
                     send_group_message(
-                    '🐋🚨🚨🦏' + '\n' + 'There is ' + order[3] + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
+                    '🐋🚨🚨🦏' + '\n' + 'There is ' + str("{:,}".format(float(order[3]))) + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round((((float(order[2])-float(order[6]))/float(order[6]))*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))
                     sleep(1)
                 elif 0.05<= float(order[5]) < 0.06:
                     send_group_message(
-                    '🐋🚨🦏' '\n' + 'There is ' + order[3] + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
+                    '🐋🚨🦏' '\n' + 'There is ' + str("{:,}".format(float(order[3]))) + ' #Contracts ' + ('ASKs' if float(order[2]) > float(order[6]) else 'BIDs') + 
                     ' at $' + order[2] + ' level.' + 
                     '\n' + str(round((((float(order[2])-float(order[6]))/float(order[6]))*100),2)) + '%' + ' From Market Price.')
                     csv_logger.info("%s" %(order[4]))

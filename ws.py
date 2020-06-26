@@ -132,7 +132,7 @@ class BitMEXWebsocket:
         if not self.exited:
             self.logger.error("Error : %s" % error)
             raise websocket.WebSocketException(error)
-            self.logger.warning('Websocket Error, will reset...')
+            self.logger.error('Websocket Error, reseting...')
             ws.reset()
 
     def __on_open(self):

@@ -54,13 +54,14 @@ def load_orders():
     return 
 
 def dailymessage():
-    yesterday = dt.today() - datetime.timedelta(days= 1)
+    today = datetime.datetime.today()
     try:
-        with open(DATA_DIR + 'liquidation/liquidation' + '_' + yesterday.strftime('%Y-%m-%d') + '.csv' , 'r') as f:
+        with open(DATA_DIR + 'liquidation/liquidation' + '_' + today.strftime('%Y-%m-%d') + '.csv' , 'r') as f:
             readcsv = csv.reader(f, delimiter=',')
             m_liquidations = [row for row in readcsv]
     except:
         m_liquidations = [] 
+
 
     dailymessage = (
         'Liquidation Daily Report:' + '\n' +
@@ -76,7 +77,7 @@ def dailymessage():
         '🍎 ' + str("{:,}".format(round(sum([float(order[6]) for order in m_liquidations if order[4] == ' Sell']),2))) + 'contracts in ' +  
         str(len([order for order in m_liquidations if order[4] == ' Sell'])) + ' Lonngs Liquidated.')
     
-    return dailymessage
+    return send_group_message(dailymessage)
  
 def InitialiseBot():
     
@@ -88,8 +89,7 @@ def InitialiseBot():
     announcements_logger = setup_db('announcements_telegram')
         
    # Daily Report
-    schedule.every().day.at("00:01").do(send_group_message, dailymessage())
-
+    schedule.every().day.at("23:59:50").do(dailymessage)
     while (True):
         load_orders()
         schedule.run_pending()
